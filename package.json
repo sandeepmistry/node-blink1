@@ -1,0 +1,12 @@
+{
+   "name": "node-blink1",
+   "version": "0.0.1",
+   "description": "A node.js library for the blink(1).",
+   "keywords": [
+       "blink(1)",
+       "blink1" 
+   ],
+   "dependencies": {
+       "node-hid": "0.1.x"
+   }
+}
