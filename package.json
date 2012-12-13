@@ -31,5 +31,5 @@
     "pretest": "jshint src/ test/",
     "test": "mocha -R spec test/unit.js"
   },
-  "main": "./blink1"
+  "main": "./src/blink1"
 }
