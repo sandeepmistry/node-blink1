@@ -1,12 +1,35 @@
 {
-   "name": "node-blink1",
-   "version": "0.0.1",
-   "description": "A node.js library for the blink(1).",
-   "keywords": [
-       "blink(1)",
-       "blink1" 
-   ],
-   "dependencies": {
-       "node-hid": "0.1.x"
-   }
+  "name": "node-blink1",
+  "description": "A node.js library for the blink(1).",
+  "version": "0.0.1",
+  "author": {
+    "name": "Sandeep Mistry",
+    "email": "sandeep.mistry@gmail.com",
+    "url": "https://github.com/sandeepmistry"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sandeepmistry/node-blink1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sandeepmistry/node-blink1/issues"
+  },
+  "keywords": [
+     "blink(1)",
+     "blink1" 
+  ],
+  "dependencies": {
+    "node-hid": "0.1.x"
+  },
+  "devDependencies": {
+    "jshint": "*",
+    "mocha": "*",
+    "should": "*",
+    "mockery": "*"
+  },
+  "scripts": {
+    "pretest": "jshint src/ test/",
+    "test": "mocha -R spec test/unit.js"
+  },
+  "main": "./blink1"
 }
