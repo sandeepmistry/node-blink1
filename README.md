@@ -11,7 +11,7 @@ Install
 Usage
 -----
 
-    var Blink1 = require('blink1');
+    var Blink1 = require('node-blink1');
 
 Get list of blink(1) devices connected:
 
