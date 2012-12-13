@@ -23,7 +23,7 @@ Create blink(1) object without serial number, uses first device:
     
 Create blink(1) object with serial number, to get list of serial numbers use `Blink1.devices()`:
 
-    var blink1 = new Blink1.Blink1();
+    var blink1 = new Blink1.Blink1(serialNumber);
     
 
 Get version:
