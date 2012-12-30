@@ -38,7 +38,7 @@ Fade to RGB, optional callback called after `fadeMillis` ms:
     
 Set RGB:
 
-    blink1.setRGB(fadeMillis, r, g, b, [callback])
+    blink1.setRGB(r, g, b, [callback])
     
 __Other methods__
     
