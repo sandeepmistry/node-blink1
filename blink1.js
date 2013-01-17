@@ -1,4 +1,4 @@
-var HID = require('HID');
+var HID = require('node-hid');
 
 var VENDOR_ID = 0x27B8;
 var PRODUCT_ID = 0x01ED;

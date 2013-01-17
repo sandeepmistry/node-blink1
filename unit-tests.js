@@ -3,7 +3,7 @@ var should = require('should');
 var mockery = require('mockery');
 
 describe('blink(1)', function() {
-  var BLINK1_SRC_PATH = '../src/blink1';
+  var BLINK1_SRC_PATH = './blink1';
 
   var VENDOR_ID = 0x27B8;
   var PRODUCT_ID = 0x01ED;
@@ -55,7 +55,7 @@ describe('blink(1)', function() {
     mockery.registerAllowable(BLINK1_SRC_PATH);
     mockery.enable();
 
-    mockery.registerMock('HID', mockHID);
+    mockery.registerMock('node-hid', mockHID);
 
     Blink1 = require(BLINK1_SRC_PATH);
   });
@@ -64,7 +64,7 @@ describe('blink(1)', function() {
     mockery.deregisterAllowable(BLINK1_SRC_PATH);
     mockery.disable();
 
-    mockery.deregisterMock('HID');
+    mockery.deregisterMock('node-hid');
 
     Blink1 = null;
     mockHIDdevices = null;
