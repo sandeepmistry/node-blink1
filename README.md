@@ -9,7 +9,7 @@ Install
     npm install node-blink1
     
     
-(Windows users see [issue #3](https://github.com/sandeepmistry/node-blink1/issues/3))
+(Windows users see [issue #3](https://github.com/sandeepmistry/node-blink1/issues/3), Linux users see [issue #4](https://github.com/sandeepmistry/node-blink1/issues/4))
 
 Usage
 -----
