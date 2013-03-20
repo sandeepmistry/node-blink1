@@ -29,8 +29,8 @@ function Blink1(serialNumber) {
 
   var blink1HIDdevicePath = null;
 
-  if (serialNumber === undefined) {
-    serialNumber =  blink1HIDdevices[0].serialNumber;
+  if (typeof serialNumber === 'string') {
+    serialNumber = blink1HIDdevices[0].serialNumber;
   }
 
   blink1HIDdevices.some(function(blink1HIDdevice) {
@@ -71,7 +71,7 @@ Blink1.prototype.version = function(callback) {
   this._readResponse(function(response) {
     var version = String.fromCharCode(response[3]) + '.' + String.fromCharCode(response[4]);
 
-    if(callback) {
+    if (typeof callback === 'function') {
       callback(version);
     }
   });
@@ -83,7 +83,7 @@ Blink1.prototype.eeRead = function(address, callback) {
   this._readResponse(function(response) {
     var value = response[3];
 
-    if(callback) {
+    if (typeof callback === 'function') {
       callback(value);
     }
   });
@@ -92,34 +92,58 @@ Blink1.prototype.eeRead = function(address, callback) {
 Blink1.prototype.eeWrite = function(address, value, callback) {
   this._sendCommand('E', address, value);
 
-  if(callback) {
+  if (typeof callback === 'function') {
     callback();
   }
 };
 
 Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b, callback) {
+  if (typeof fadeMillis !== 'number' || b < 0) {
+    throw new TypeError('fadeMillis must be a number greater than 0');
+  }
+  if (typeof r !== 'number' || r < 0 || r > 255) {
+    throw new TypeError('r must be a number between 0 and 255');
+  }
+  if (typeof g !== 'number' || g < 0 || g > 255) {
+    throw new TypeError('g must be a number between 0 and 255');
+  }
+  if (typeof b !== 'number' || b < 0 || b > 255) {
+    throw new TypeError('b must be a number between 0 and 255');
+  }
   var dms = fadeMillis / 10;
   this._sendCommand('c', r, g, b, dms >> 8, dms % 0xff);
 
-  if(callback) {
+  if (typeof callback === 'function') {
     setTimeout(callback, fadeMillis);
   }
 };
 //
 Blink1.prototype.setRGB = function(r, g, b, callback) {
+  if (typeof r !== 'number' || r < 0 || r > 255) {
+    throw new TypeError('r must be a number between 0 and 255');
+  }
+  if (typeof g !== 'number' || g < 0 || g > 255) {
+    throw new TypeError('g must be a number between 0 and 255');
+  }
+  if (typeof b !== 'number' || b < 0 || b > 255) {
+    throw new TypeError('b must be a number between 0 and 255');
+  }
   this._sendCommand('n', r, g, b);
 
-  if (callback) {
+  if (typeof callback === 'function') {
     callback();
   }
 };
 
 Blink1.prototype.serverDown = function(on, millis, callback) {
+  // cast on and warn if fringe type
+  if (typeof millis !== 'number' || millis < 0)
+    throw new TypeError('millis must be a number greater than 0');
   var dms = millis / 10;
 
   this._sendCommand('D', on, dms >> 8, dms % 0xff);
 
-  if (callback) {
+  if (typeof callback === 'function') {
     setTimeout(callback, millis);
   }
 };
@@ -127,22 +151,35 @@ Blink1.prototype.serverDown = function(on, millis, callback) {
 Blink1.prototype.play = function(play, position, callback) {
   this._sendCommand('p', play, position);
 
-  if (callback) {
+  if (typeof callback === 'function') {
     callback();
   }
 };
 
 Blink1.prototype.writePatternLine = function(fadeMillis, r, g, b, position, callback) {
+  // TODO: typecheck position
+  if (typeof millis !== 'number' || millis < 0)
+    throw new TypeError('fadeMillis must be a number greater than 0');
+  if (typeof r !== 'number' || r < 0 || r > 255) {
+    throw new TypeError('r must be a number between 0 and 255');
+  }
+  if (typeof g !== 'number' || g < 0 || g > 255) {
+    throw new TypeError('g must be a number between 0 and 255');
+  }
+  if (typeof b !== 'number' || b < 0 || b > 255) {
+    throw new TypeError('b must be a number between 0 and 255');
+  }
   var dms = fadeMillis / 10;
 
   this._sendCommand('P', r, g, b, dms >> 8, dms % 0xff, position, 0);
 
-  if (callback) {
+  if (typeof callback === 'function') {
     callback();
   }
 };
 
 Blink1.prototype.readPatternLine = function(position, callback) {
+  // TODO: typecheck position
   this._sendCommand('R', 0, 0, 0, 0, 0, position, 0);
 
   this._readResponse(function(response) {
@@ -153,7 +190,7 @@ Blink1.prototype.readPatternLine = function(position, callback) {
       fadeMillis: ((response[5] << 8) + (response[6] & 0xff)) * 10
     };
 
-    if (callback) {
+    if (typeof callback === 'function') {
       callback(value);
     }
   });
