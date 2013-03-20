@@ -1,15 +1,37 @@
 node-blink1
 ===========
 
-A node.js library for the [blink(1)](http://www.kickstarter.com/projects/thingm/blink1-the-usb-rgb-led) by [ThingM](http://thingm.com)
+A node.js library for the
+[blink(1)](http://www.kickstarter.com/projects/thingm/blink1-the-usb-rgb-led)
+by [ThingM](http://thingm.com).
 
 Install
 -------
 
     npm install node-blink1
-    
-    
-(Windows users see [issue #3](https://github.com/sandeepmistry/node-blink1/issues/3), Linux users see [issue #4](https://github.com/sandeepmistry/node-blink1/issues/4))
+
+### Windows Users
+
+`node-blink1` depends on `node-hid`, a native module that uses `node-gyp` to
+build.  `node-gyp` requires Python 2.7.3 in the PATH, and if you have Python 3
+installed, you may have to modify your PATH for `node-gyp` to locate it.
+
+See [issue #3](https://github.com/sandeepmistry/node-blink1/issues/3) for
+details.
+
+### Linux Users
+
+If you encounter the following error while installing, you'll need new install
+of `libusb`.
+
+```
+libusb.h: No such file or directory compilation terminated.
+```
+
+For Debian and Ubuntu, install the package `libusb-1.0-0.dev`.
+
+See [issue #4](https://github.com/sandeepmistry/node-blink1/issues/4) for
+details.
 
 Usage
 -----
@@ -24,10 +46,10 @@ Create blink(1) object without serial number, uses first device:
 
     var blink1 = new Blink1.Blink1();
     
-Create blink(1) object with serial number, to get list of serial numbers use `Blink1.devices()`:
+Create blink(1) object with serial number, to get list of serial numbers use
+`Blink1.devices()`:
 
     var blink1 = new Blink1.Blink1(serialNumber);
-    
 
 Get version:
 
@@ -66,9 +88,19 @@ License
 
 Copyright (C) 2012 Sandeep Mistry <sandeep.mistry@gmail.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
