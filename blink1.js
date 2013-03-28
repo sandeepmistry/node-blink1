@@ -136,7 +136,10 @@ Blink1.prototype.setRGB = function(r, g, b, callback) {
 };
 
 Blink1.prototype.serverDown = function(on, millis, callback) {
-  // cast on and warn if fringe type
+  // warn if fringe type
+  if (typeof on !== 'number' && typeof on !== 'boolean')
+    console.warn("warning: the 'on' input for serverDown should be a boolean");
+  on = !!on; // casts on to a boolean
   if (typeof millis !== 'number' || millis < 0)
     throw new TypeError('millis must be a number greater than 0');
   var dms = millis / 10;
@@ -149,6 +152,16 @@ Blink1.prototype.serverDown = function(on, millis, callback) {
 };
 
 Blink1.prototype.play = function(play, position, callback) {
+  // warn if fringe type
+  if (typeof play !== 'number' && typeof play !== 'boolean')
+    console.warn("warning: the 'play' input for play should be a boolean");
+  play = !!play; // casts play to a boolean
+  if (typeof position !== 'number' || position < 0 || position > 11)
+    throw new TypeError('position must be a number between 0 and 11');
+  // warn if not an integer
+  if ((position | 0) !== position)
+    console.warn("warning: the 'position' input for play should be an integer");
+
   this._sendCommand('p', play, position);
 
   if (typeof callback === 'function') {
@@ -157,7 +170,6 @@ Blink1.prototype.play = function(play, position, callback) {
 };
 
 Blink1.prototype.writePatternLine = function(fadeMillis, r, g, b, position, callback) {
-  // TODO: typecheck position
   if (typeof millis !== 'number' || millis < 0)
     throw new TypeError('fadeMillis must be a number greater than 0');
   if (typeof r !== 'number' || r < 0 || r > 255) {
@@ -169,6 +181,11 @@ Blink1.prototype.writePatternLine = function(fadeMillis, r, g, b, position, call
   if (typeof b !== 'number' || b < 0 || b > 255) {
     throw new TypeError('b must be a number between 0 and 255');
   }
+  if (typeof position !== 'number' || position < 0 || position > 11)
+    throw new TypeError('position must be a number between 0 and 11');
+  // warn if not an integer
+  if ((position | 0) !== position)
+    console.warn("warning: the 'position' input for play should be an integer");
   var dms = fadeMillis / 10;
 
   this._sendCommand('P', r, g, b, dms >> 8, dms % 0xff, position, 0);
@@ -179,7 +196,11 @@ Blink1.prototype.writePatternLine = function(fadeMillis, r, g, b, position, call
 };
 
 Blink1.prototype.readPatternLine = function(position, callback) {
-  // TODO: typecheck position
+  if (typeof position !== 'number' || position < 0 || position > 11)
+    throw new TypeError('position must be a number between 0 and 11');
+  // warn if not an integer
+  if ((position | 0) !== position)
+    console.warn("warning: the 'position' input for play should be an integer");
   this._sendCommand('R', 0, 0, 0, 0, 0, position, 0);
 
   this._readResponse(function(response) {
