@@ -243,6 +243,36 @@ describe('blink(1)', function() {
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
+    
+    it('should not throw an error for valid inputs', function() {
+      (function() {
+        blink1.fadeToRGB(FADE_MILLIS, R, G, B);
+      }).should.not.throw('must be a number');
+    });
+    
+    it('should throw an error for an invalid fade time', function() {
+      (function() {
+        blink1.fadeToRGB({}, R, G, B);
+      }).should.throw(/^fadeMillis/);
+    });
+    
+    it('should throw an error for an invalid red component', function() {
+      (function() {
+        blink1.fadeToRGB(FADE_MILLIS, {}, G, B);
+      }).should.throw(/^r /);
+    });
+    
+    it('should throw an error for an invalid green component', function() {
+      (function() {
+        blink1.fadeToRGB(FADE_MILLIS, R, {}, B);
+      }).should.throw(/^g /);
+    });
+    
+    it('should throw an error for an invalid blue component', function() {
+      (function() {
+        blink1.fadeToRGB(FADE_MILLIS, R, G, {});
+      }).should.throw(/^b /);
+    });
 
     it('should send fadetorgb feature report', function() {
       blink1.fadeToRGB(FADE_MILLIS, R, G, B);
@@ -262,6 +292,30 @@ describe('blink(1)', function() {
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
+    
+    it('should not throw an error for valid inputs', function() {
+      (function() {
+        blink1.setRGB(R, G, B);
+      }).should.not.throw('must be a number');
+    });
+    
+    it('should throw an error for an invalid red component', function() {
+      (function() {
+        blink1.setRGB({}, G, B);
+      }).should.throw(/^r /);
+    });
+    
+    it('should throw an error for an invalid green component', function() {
+      (function() {
+        blink1.setRGB(R, {}, B);
+      }).should.throw(/^g /);
+    });
+    
+    it('should throw an error for an invalid blue component', function() {
+      (function() {
+        blink1.setRGB(R, G, {});
+      }).should.throw(/^b /);
+    });
 
     it('should send setrgb feature report', function() {
       blink1.setRGB(R, G, B);
@@ -279,6 +333,18 @@ describe('blink(1)', function() {
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
+    
+    it('should not throw an error for valid inputs', function() {
+      (function() {
+        blink1.serverDown(0, 0);
+      }).should.not.throw('must be a number');
+    });
+
+    it('should throw an error for an invalid time', function() {
+      (function() {
+        blink1.serverDown(0, {});
+      }).should.throw(/^millis/);
+    });
 
     it('should send serverdown on feature report', function() {
       blink1.serverDown(1, MILLIS);
@@ -302,6 +368,18 @@ describe('blink(1)', function() {
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
+    
+    it('should not throw an error for valid inputs', function() {
+      (function() {
+        blink1.play(1, POSITION);
+      }).should.not.throw('must be a number');
+    });
+
+    it('should throw an error for an invalid position', function() {
+      (function() {
+        blink1.play(1, {});
+      }).should.throw(/^position/);
+    });
 
     it('should send play on feature report', function() {
       blink1.play(1, POSITION);
@@ -329,6 +407,42 @@ describe('blink(1)', function() {
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
+    
+    it('should not throw an error for valid inputs', function() {
+      (function() {
+        blink1.writePatternLine(FADE_MILLIS, R, G, B, POSITION);
+      }).should.not.throw('must be a number');
+    });
+    
+    it('should throw an error for an invalid fade time', function() {
+      (function() {
+        blink1.writePatternLine({}, R, G, B, POSITION);
+      }).should.throw(/^fadeMillis/);
+    });
+    
+    it('should throw an error for an invalid red component', function() {
+      (function() {
+        blink1.writePatternLine(FADE_MILLIS, {}, G, B, POSITION);
+      }).should.throw(/^r /);
+    });
+    
+    it('should throw an error for an invalid green component', function() {
+      (function() {
+        blink1.writePatternLine(FADE_MILLIS, R, {}, B, POSITION);
+      }).should.throw(/^g /);
+    });
+    
+    it('should throw an error for an invalid blue component', function() {
+      (function() {
+        blink1.writePatternLine(FADE_MILLIS, R, G, {}, POSITION);
+      }).should.throw(/^b /);
+    });
+
+    it('should throw an error for an invalid position', function() {
+      (function() {
+        blink1.writePatternLine(FADE_MILLIS, R, G, B, {});
+      }).should.throw(/^position/);
+    });
 
     it('should send writepatternline feature report', function() {
       blink1.writePatternLine(FADE_MILLIS, R, G, B, POSITION);
@@ -355,6 +469,18 @@ describe('blink(1)', function() {
       recvFeatureReport = [FEATURE_REPORT_ID, 0x52, R, G, B, (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, POSITION, 0];
     });
     afterEach(teardownBlink1);
+    
+    it('should not throw an error for valid inputs', function() {
+      (function() {
+        blink1.readPatternLine(POSITION);
+      }).should.not.throw('must be a number');
+    });
+
+    it('should throw an error for an invalid position', function() {
+      (function() {
+        blink1.readPatternLine({});
+      }).should.throw(/^position/);
+    });
 
     it('should send readpatternline feature report', function() {
       blink1.readPatternLine(POSITION);
@@ -369,7 +495,6 @@ describe('blink(1)', function() {
     });
 
     it('should call back with correct value', function(done) {
-
       blink1.readPatternLine(POSITION, function(value) {
         value.r.should.eql(R);
         value.g.should.eql(G);
