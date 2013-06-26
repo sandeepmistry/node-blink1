@@ -121,7 +121,7 @@ Blink1.prototype.setRGB = function(r, g, b, callback) {
   }
 };
 
-Blink1.prototype.serverDown = function(on, millis, callback) {
+Blink1.prototype._serverDown = function(on, millis, callback) {
   var dms = millis / 10;
 
   this._sendCommand('D', on, dms >> 8, dms % 0xff);
@@ -129,6 +129,14 @@ Blink1.prototype.serverDown = function(on, millis, callback) {
   if (callback) {
     setTimeout(callback, millis);
   }
+};
+
+Blink1.prototype.enableServerDown = function(millis, callback) {
+  this._serverDown(1, millis, callback);
+};
+
+Blink1.prototype.disableServerDown = function(millis, callback) {
+  this._serverDown(0, millis, callback);
 };
 
 Blink1.prototype._play = function(play, position, callback) {

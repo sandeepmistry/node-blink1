@@ -274,26 +274,37 @@ describe('blink(1)', function() {
     });
   });
 
-  describe('#Blink1.serverDown', function() {
+  describe('#Blink1.enableServerDown', function() {
     var MILLIS = 10;
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
 
     it('should send serverdown on feature report', function() {
-      blink1.serverDown(1, MILLIS);
+      blink1.enableServerDown(MILLIS);
 
       sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x44, 1, (MILLIS / 10) >> 8, (MILLIS / 10) % 0xff, 0, 0, 0, 0]);
     });
 
+    it('should call back', function(done) {
+      blink1.enableServerDown(0, done);
+    });
+  });
+
+  describe('#Blink1.disableServerDown', function() {
+    var MILLIS = 10;
+
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
     it('should send serverdown off feature report', function() {
-      blink1.serverDown(0, 0);
+      blink1.disableServerDown(0);
 
       sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x44, 0, 0, 0, 0, 0, 0, 0]);
     });
 
     it('should call back', function(done) {
-      blink1.serverDown(1, 0, done);
+      blink1.disableServerDown(0, done);
     });
   });
 

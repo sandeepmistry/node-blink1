@@ -67,9 +67,11 @@ Set RGB:
     
 __Other methods__
     
-Set server down (on, off), optional callback called after `millis` ms:
+Set server down (enable, disable), optional callback called after `millis` ms:
 
-    blink1.serverDown(on, millis, [callback])
+    blink1.enableServerDown(millis, [callback])
+
+    blink1.disableServerDown(millis, [callback])
     
 Play:
 
