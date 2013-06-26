@@ -304,19 +304,28 @@ describe('blink(1)', function() {
     afterEach(teardownBlink1);
 
     it('should send play on feature report', function() {
-      blink1.play(1, POSITION);
+      blink1.play(POSITION);
 
       sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x70, 1, POSITION, 0, 0, 0, 0, 0]);
     });
 
+    it('should call back', function(done) {
+      blink1.play(0, done);
+    });
+  });
+
+  describe('#Blink1.pause', function() {
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
     it('should send play off feature report', function() {
-      blink1.play(0, 0);
+      blink1.pause();
 
       sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x70, 0, 0, 0, 0, 0, 0, 0]);
     });
 
     it('should call back', function(done) {
-      blink1.play(1, 0, done);
+      blink1.pause(done);
     });
   });
 

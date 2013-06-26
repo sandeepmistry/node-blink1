@@ -131,12 +131,20 @@ Blink1.prototype.serverDown = function(on, millis, callback) {
   }
 };
 
-Blink1.prototype.play = function(play, position, callback) {
+Blink1.prototype._play = function(play, position, callback) {
   this._sendCommand('p', play, position);
 
   if (callback) {
     callback();
   }
+};
+
+Blink1.prototype.play = function(position, callback) {
+  this._play(1, position, callback);
+};
+
+Blink1.prototype.pause = function(callback) {
+  this._play(0, 0, callback);
 };
 
 Blink1.prototype.writePatternLine = function(fadeMillis, r, g, b, position, callback) {

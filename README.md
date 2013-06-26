@@ -73,7 +73,11 @@ Set server down (on, off), optional callback called after `millis` ms:
     
 Play:
 
-    blink1.play = function(play, position, [callback])
+    blink1.play = function(position, [callback])
+
+Pause:
+
+    blink1.pause = function([callback])
     
 Write pattern line:
 
