@@ -5,6 +5,8 @@ A node.js library for the
 [blink(1)](http://www.kickstarter.com/projects/thingm/blink1-the-usb-rgb-led)
 by [ThingM](http://thingm.com).
 
+For for info. on the blink(1), see [todbot/blink1](https://github.com/todbot/blink1)
+
 Install
 -------
 
@@ -59,35 +61,36 @@ __Set colors__
     
 Fade to RGB, optional callback called after `fadeMillis` ms:
     
-    blink1.fadeToRGB(fadeMillis, r, g, b, [callback])
+    blink1.fadeToRGB(fadeMillis, r, g, b, [callback]) // r, g, b: 0 - 255
     
 Set RGB:
 
-    blink1.setRGB(r, g, b, [callback])
+    blink1.setRGB(r, g, b, [callback]) // r, g, b: 0 - 255
     
 __Other methods__
     
 Set server down (enable, disable), optional callback called after `millis` ms:
 
-    blink1.enableServerDown(millis, [callback])
+    blink1.enableServerDown(millis, [callback]) // tickle
 
-    blink1.disableServerDown(millis, [callback])
+    blink1.disableServerDown(millis, [callback]) // off
     
-Play:
+Play (start playing the pattern lines at the specified position):
 
     blink1.play = function(position, [callback])
 
-Pause:
+Pause (stop playing the pattern line):
 
     blink1.pause = function([callback])
     
-Write pattern line:
+Write pattern line (set the parameters for a pattern line, at the specified position):
 
-    blink1.writePatternLine(fadeMillis, r, g, b, position, [callback])
+    blink1.writePatternLine(fadeMillis, r, g, b, position, [callback]) // r, g, b: 0 - 255
     
-Read pattern line:
+Read pattern line (at the position):
 
     blink1.readPatternLine(position, [callback])
+
 
 License
 ========
