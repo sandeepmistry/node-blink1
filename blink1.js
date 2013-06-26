@@ -97,9 +97,16 @@ Blink1.prototype.eeWrite = function(address, value, callback) {
   }
 };
 
+Blink1.prototype.degamma = function(n) {
+  return Math.floor(((1 << Math.floor(n / 32)) - 1) + 
+          Math.floor((1 << Math.floor(n / 32)) * Math.floor((n % 32) + 1) + 15) / 32);
+};
+
+
 Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b, callback) {
   var dms = fadeMillis / 10;
-  this._sendCommand('c', r, g, b, dms >> 8, dms % 0xff);
+
+  this._sendCommand('c', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms % 0xff);
 
   if(callback) {
     setTimeout(callback, fadeMillis);
@@ -107,7 +114,7 @@ Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b, callback) {
 };
 //
 Blink1.prototype.setRGB = function(r, g, b, callback) {
-  this._sendCommand('n', r, g, b);
+  this._sendCommand('n', this.degamma(r), this.degamma(g), this.degamma(b));
 
   if (callback) {
     callback();
@@ -135,7 +142,7 @@ Blink1.prototype.play = function(play, position, callback) {
 Blink1.prototype.writePatternLine = function(fadeMillis, r, g, b, position, callback) {
   var dms = fadeMillis / 10;
 
-  this._sendCommand('P', r, g, b, dms >> 8, dms % 0xff, position, 0);
+  this._sendCommand('P', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms % 0xff, position, 0);
 
   if (callback) {
     callback();

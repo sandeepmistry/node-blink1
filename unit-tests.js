@@ -247,11 +247,11 @@ describe('blink(1)', function() {
     it('should send fadetorgb feature report', function() {
       blink1.fadeToRGB(FADE_MILLIS, R, G, B);
 
-      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, R, G, B, (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, 0, 0]);
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, 0, 0]);
     });
 
     it('should call back', function(done) {
-      blink1.fadeToRGB(FADE_MILLIS, R, G, B, done);
+      blink1.fadeToRGB(FADE_MILLIS, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), done);
     });
   });
 
@@ -266,7 +266,7 @@ describe('blink(1)', function() {
     it('should send setrgb feature report', function() {
       blink1.setRGB(R, G, B);
 
-      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x6e, R, G, B, 0, 0, 0, 0]);
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x6e, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 0, 0, 0, 0]);
     });
 
     it('should call back', function(done) {
@@ -333,7 +333,7 @@ describe('blink(1)', function() {
     it('should send writepatternline feature report', function() {
       blink1.writePatternLine(FADE_MILLIS, R, G, B, POSITION);
 
-      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x50, R, G, B, (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, POSITION, 0]);
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x50, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, POSITION, 0]);
     });
 
     it('should call back', function(done) {
