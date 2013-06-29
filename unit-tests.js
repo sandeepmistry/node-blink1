@@ -195,6 +195,24 @@ describe('blink(1)', function() {
     });
     afterEach(teardownBlink1);
 
+    it('should throw an error when address is not a number', function() {
+      (function(){
+        blink1.eeRead('Bad address');
+      }).should.throwError('address must be a number');
+    });
+
+    it('should throw an error when address is less than 0', function() {
+      (function(){
+        blink1.eeRead(-1);
+      }).should.throwError('address must be between 0 and 65535');
+    });
+
+    it('should throw an error when address is greater than 65535', function() {
+      (function(){
+        blink1.eeRead(65536);
+      }).should.throwError('address must be between 0 and 65535');
+    });
+
     it('should send eeread feature report', function() {
       blink1.eeRead(ADDRESS);
 
@@ -224,6 +242,42 @@ describe('blink(1)', function() {
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
 
+    it('should throw an error when address is not a number', function() {
+      (function(){
+        blink1.eeWrite('Bad address', VALUE);
+      }).should.throwError('address must be a number');
+    });
+
+    it('should throw an error when address is less than 0', function() {
+      (function(){
+        blink1.eeWrite(-1, VALUE);
+      }).should.throwError('address must be between 0 and 65535');
+    });
+
+    it('should throw an error when address is greater than 65535', function() {
+      (function(){
+        blink1.eeWrite(65536, VALUE);
+      }).should.throwError('address must be between 0 and 65535');
+    });
+
+    it('should throw an error when value is not a number', function() {
+      (function(){
+        blink1.eeWrite(ADDRESS, 'Bad value');
+      }).should.throwError('value must be a number');
+    });
+
+    it('should throw an error when value is less than 0', function() {
+      (function(){
+        blink1.eeWrite(ADDRESS, -1);
+      }).should.throwError('value must be between 0 and 255');
+    });
+
+    it('should throw an error when value is greater than 255', function() {
+      (function(){
+        blink1.eeWrite(ADDRESS, 256);
+      }).should.throwError('value must be between 0 and 255');
+    });
+
     it('should send eewrite feature report', function() {
       blink1.eeWrite(ADDRESS, VALUE);
 
@@ -244,6 +298,78 @@ describe('blink(1)', function() {
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
 
+    it('should throw an error when fadeMillis is not a number', function() {
+      (function(){
+        blink1.fadeToRGB('Bad fadeMillis', R, G, B);
+      }).should.throwError('fadeMillis must be a number');
+    });
+
+    it('should throw an error when fadeMillis is less than 0', function() {
+      (function(){
+        blink1.fadeToRGB(-1, R, G, B);
+      }).should.throwError('fadeMillis must be between 0 and 655350');
+    });
+
+    it('should throw an error when fadeMillis is greater than 655350', function() {
+      (function(){
+        blink1.fadeToRGB(655351, R, G, B);
+      }).should.throwError('fadeMillis must be between 0 and 655350');
+    });
+
+    it('should throw an error when r is not a number', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, 'Bad r', G, B);
+      }).should.throwError('r must be a number');
+    });
+
+    it('should throw an error when r is less than 0', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, -1, G, B);
+      }).should.throwError('r must be between 0 and 255');
+    });
+
+    it('should throw an error when r is greater than 255', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, 256, G, B);
+      }).should.throwError('r must be between 0 and 255');
+    });
+
+    it('should throw an error when g is not a number', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, R, 'Bad g', B);
+      }).should.throwError('g must be a number');
+    });
+
+    it('should throw an error when g is less than 0', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, R, -1, B);
+      }).should.throwError('g must be between 0 and 255');
+    });
+
+    it('should throw an error when g is greater than 255', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, R, 256, B);
+      }).should.throwError('g must be between 0 and 255');
+    });
+
+    it('should throw an error when b is not a number', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, R, G, 'Bad b');
+      }).should.throwError('b must be a number');
+    });
+
+    it('should throw an error when b is less than 0', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, R, G, -1);
+      }).should.throwError('b must be between 0 and 255');
+    });
+
+    it('should throw an error when b is greater than 255', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, R, G, 256);
+      }).should.throwError('b must be between 0 and 255');
+    });
+
     it('should send fadetorgb feature report', function() {
       blink1.fadeToRGB(FADE_MILLIS, R, G, B);
 
@@ -263,6 +389,60 @@ describe('blink(1)', function() {
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
 
+    it('should throw an error when r is not a number', function() {
+      (function(){
+        blink1.setRGB('Bad r', G, B);
+      }).should.throwError('r must be a number');
+    });
+
+    it('should throw an error when r is less than 0', function() {
+      (function(){
+        blink1.setRGB(-1, G, B);
+      }).should.throwError('r must be between 0 and 255');
+    });
+
+    it('should throw an error when r is greater than 255', function() {
+      (function(){
+        blink1.setRGB(256, G, B);
+      }).should.throwError('r must be between 0 and 255');
+    });
+
+    it('should throw an error when g is not a number', function() {
+      (function(){
+        blink1.setRGB(R, 'Bad g', B);
+      }).should.throwError('g must be a number');
+    });
+
+    it('should throw an error when g is less than 0', function() {
+      (function(){
+        blink1.setRGB(R, -1, B);
+      }).should.throwError('g must be between 0 and 255');
+    });
+
+    it('should throw an error when g is greater than 255', function() {
+      (function(){
+        blink1.setRGB(R, 256, B);
+      }).should.throwError('g must be between 0 and 255');
+    });
+
+    it('should throw an error when b is not a number', function() {
+      (function(){
+        blink1.setRGB(R, G, 'Bad b');
+      }).should.throwError('b must be a number');
+    });
+
+    it('should throw an error when b is less than 0', function() {
+      (function(){
+        blink1.setRGB(R, G, -1);
+      }).should.throwError('b must be between 0 and 255');
+    });
+
+    it('should throw an error when b is greater than 255', function() {
+      (function(){
+        blink1.setRGB(R, G, 256);
+      }).should.throwError('b must be between 0 and 255');
+    });
+
     it('should send setrgb feature report', function() {
       blink1.setRGB(R, G, B);
 
@@ -279,6 +459,24 @@ describe('blink(1)', function() {
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
+
+    it('should throw an error when millis is not a number', function() {
+      (function(){
+        blink1.enableServerDown('Bad millis');
+      }).should.throwError('millis must be a number');
+    });
+
+    it('should throw an error when millis is less than 0', function() {
+      (function(){
+        blink1.enableServerDown(-1);
+      }).should.throwError('millis must be between 0 and 655350');
+    });
+
+    it('should throw an error when millis is greater than 655350', function() {
+      (function(){
+        blink1.enableServerDown(655351);
+      }).should.throwError('millis must be between 0 and 655350');
+    });
 
     it('should send serverdown on feature report', function() {
       blink1.enableServerDown(MILLIS);
@@ -297,6 +495,24 @@ describe('blink(1)', function() {
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
 
+    it('should throw an error when millis is not a number', function() {
+      (function(){
+        blink1.disableServerDown('Bad millis');
+      }).should.throwError('millis must be a number');
+    });
+
+    it('should throw an error when millis is less than 0', function() {
+      (function(){
+        blink1.disableServerDown(-1);
+      }).should.throwError('millis must be between 0 and 655350');
+    });
+
+    it('should throw an error when millis is greater than 655350', function() {
+      (function(){
+        blink1.disableServerDown(655351);
+      }).should.throwError('millis must be between 0 and 655350');
+    });
+
     it('should send serverdown off feature report', function() {
       blink1.disableServerDown(0);
 
@@ -313,6 +529,25 @@ describe('blink(1)', function() {
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
+
+
+    it('should throw an error when position is not a number', function() {
+      (function(){
+        blink1.play('Bad position');
+      }).should.throwError('position must be a number');
+    });
+
+    it('should throw an error when position is less than 0', function() {
+      (function(){
+        blink1.play(-1);
+      }).should.throwError('position must be between 0 and 11');
+    });
+
+    it('should throw an error when position is greater than 11', function() {
+      (function(){
+        blink1.play(12);
+      }).should.throwError('position must be between 0 and 11');
+    });
 
     it('should send play on feature report', function() {
       blink1.play(POSITION);
@@ -350,6 +585,96 @@ describe('blink(1)', function() {
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
 
+    it('should throw an error when fadeMillis is not a number', function() {
+      (function(){
+        blink1.writePatternLine('Bad fadeMillis', R, G, B, POSITION);
+      }).should.throwError('fadeMillis must be a number');
+    });
+
+    it('should throw an error when fadeMillis is less than 0', function() {
+      (function(){
+        blink1.writePatternLine(-1, R, G, B, POSITION);
+      }).should.throwError('fadeMillis must be between 0 and 655350');
+    });
+
+    it('should throw an error when fadeMillis is greater than 655350', function() {
+      (function(){
+        blink1.writePatternLine(655351, R, G, B, POSITION);
+      }).should.throwError('fadeMillis must be between 0 and 655350');
+    });
+
+    it('should throw an error when r is not a number', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, 'Bad r', G, B, POSITION);
+      }).should.throwError('r must be a number');
+    });
+
+    it('should throw an error when r is less than 0', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, -1, G, B, POSITION);
+      }).should.throwError('r must be between 0 and 255');
+    });
+
+    it('should throw an error when r is greater than 255', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, 256, G, B, POSITION);
+      }).should.throwError('r must be between 0 and 255');
+    });
+
+    it('should throw an error when g is not a number', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, 'Bad g', B, POSITION);
+      }).should.throwError('g must be a number');
+    });
+
+    it('should throw an error when g is less than 0', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, -1, B, POSITION);
+      }).should.throwError('g must be between 0 and 255');
+    });
+
+    it('should throw an error when g is greater than 255', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, 256, B, POSITION);
+      }).should.throwError('g must be between 0 and 255');
+    });
+
+    it('should throw an error when b is not a number', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, G, 'Bad b', POSITION);
+      }).should.throwError('b must be a number');
+    });
+
+    it('should throw an error when b is less than 0', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, G, -1, POSITION);
+      }).should.throwError('b must be between 0 and 255');
+    });
+
+    it('should throw an error when b is greater than 255', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, G, 256, POSITION);
+      }).should.throwError('b must be between 0 and 255');
+    });
+
+    it('should throw an error when position is not a number', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, G, B, 'Bad position');
+      }).should.throwError('position must be a number');
+    });
+
+    it('should throw an error when position is less than 0', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, G, B, -1);
+      }).should.throwError('position must be between 0 and 11');
+    });
+
+    it('should throw an error when position is greater than 11', function() {
+      (function(){
+        blink1.writePatternLine(FADE_MILLIS, R, G, B, 12);
+      }).should.throwError('position must be between 0 and 11');
+    });
+
     it('should send writepatternline feature report', function() {
       blink1.writePatternLine(FADE_MILLIS, R, G, B, POSITION);
 
@@ -375,6 +700,24 @@ describe('blink(1)', function() {
       recvFeatureReport = [FEATURE_REPORT_ID, 0x52, R, G, B, (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, POSITION, 0];
     });
     afterEach(teardownBlink1);
+
+    it('should throw an error when position is not a number', function() {
+      (function(){
+        blink1.readPatternLine('Bad position');
+      }).should.throwError('position must be a number');
+    });
+
+    it('should throw an error when position is less than 0', function() {
+      (function(){
+        blink1.readPatternLine(-1);
+      }).should.throwError('position must be between 0 and 11');
+    });
+
+    it('should throw an error when position is greater than 11', function() {
+      (function(){
+        blink1.readPatternLine(12);
+      }).should.throwError('position must be between 0 and 11');
+    });
 
     it('should send readpatternline feature report', function() {
       blink1.readPatternLine(POSITION);
