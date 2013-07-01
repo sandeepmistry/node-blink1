@@ -246,5 +246,7 @@ Blink1.prototype.readPatternLine = function(position, callback) {
   });
 };
 
-exports.Blink1 = Blink1;
-exports.devices = devices;
+Blink1.devices = devices;
+Blink1 = Blink1; // backwards compatibility with older version
+
+module.exports = Blink1;

@@ -94,48 +94,48 @@ describe('blink(1)', function() {
       mockHIDdevices = [];
 
       (function(){
-        new Blink1.Blink1();
+        new Blink1();
       }).should.throwError('No blink(1)\'s could be found');
     });
 
     it('should not throw an error when there are blink(1) HID devices', function() {
       mockHIDdevices = [MOCK_HID_DEVICE_1];
 
-      new Blink1.Blink1();
+      new Blink1();
     });
 
     it('should throw an error when there are no blink(1) HID devices with the supplied serial number', function() {
       mockHIDdevices = [MOCK_HID_DEVICE_1];
 
       (function(){
-        new Blink1.Blink1(MOCK_HID_DEVICE_2_SERIAL_NUMBER);
+        new Blink1(MOCK_HID_DEVICE_2_SERIAL_NUMBER);
       }).should.throwError('No blink(1)\'s with serial number ' + MOCK_HID_DEVICE_2_SERIAL_NUMBER + ' could be found');
     });
 
     it('should not throw an error when there are blink(1) HID devices with the supplied serial number', function() {
       mockHIDdevices = [MOCK_HID_DEVICE_1];
 
-      new Blink1.Blink1(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
+      new Blink1(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
     });
 
     it('should store correct serial number', function() {
       mockHIDdevices = [MOCK_HID_DEVICE_1];
 
-      var blink1 = new Blink1.Blink1(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
+      var blink1 = new Blink1(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
       blink1.serialNumber.should.eql(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
     });
 
     it('should select first blink(1) HID device when no serial number is supplied', function() {
       mockHIDdevices = [MOCK_HID_DEVICE_1, MOCK_HID_DEVICE_2];
 
-      var blink1 = new Blink1.Blink1();
+      var blink1 = new Blink1();
       blink1.serialNumber.should.eql(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
     });
 
     it('should open correct HID device path', function() {
       mockHIDdevices = [MOCK_HID_DEVICE_1, MOCK_HID_DEVICE_2];
 
-      var blink1 = new Blink1.Blink1(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
+      var blink1 = new Blink1(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
       blink1.serialNumber.should.eql(MOCK_HID_DEVICE_1_SERIAL_NUMBER);
       blink1.hidDevice.should.equal(mockHIDdevice);
     });
@@ -146,7 +146,7 @@ describe('blink(1)', function() {
   var setupBlink1 = function() {
     mockHIDdevices = [MOCK_HID_DEVICE_1, MOCK_HID_DEVICE_2];
 
-    blink1 = new Blink1.Blink1();
+    blink1 = new Blink1();
   };
 
   var teardownBlink1 = function() {
