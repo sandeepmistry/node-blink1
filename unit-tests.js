@@ -30,6 +30,7 @@ describe('blink(1)', function() {
   var mockHIDdevices;
   var sentFeatureReport;
   var recvFeatureReport;
+  var closed = false;
 
   var mockHIDdevice = {
     sendFeatureReport: function(featureReport) {
@@ -38,6 +39,10 @@ describe('blink(1)', function() {
 
     getFeatureReport: function(id, length) {
       return ((id === FEATURE_REPORT_ID ) && (length === FEATURE_REPORT_LENGTH)) ? recvFeatureReport : null;
+    },
+
+    close: function() {
+      closed = true;
     }
   };
 
@@ -738,6 +743,25 @@ describe('blink(1)', function() {
         value.g.should.eql(G);
         value.b.should.eql(B);
         value.fadeMillis.should.eql(FADE_MILLIS);
+
+        done();
+      });
+    });
+  });
+
+  describe('#Blink1.close', function() {
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
+    it('should close HID device', function(done) {
+      blink1.close(done);
+
+      closed.should.eql(true);
+    });
+
+    it('should callback', function(done) {
+      blink1.close(function() {
+        closed.should.eql(true);
 
         done();
       });

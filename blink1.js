@@ -246,8 +246,12 @@ Blink1.prototype.readPatternLine = function(position, callback) {
   });
 };
 
-Blink1.prototype.close = function() {
+Blink1.prototype.close = function(callback) {
 	this.hidDevice.close();
+
+  if(this._isValidCallback(callback)) {
+    callback();
+  }
 };
 
 Blink1.devices = devices;

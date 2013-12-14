@@ -91,6 +91,9 @@ Read pattern line (at the position):
 
     blink1.readPatternLine(position, [callback])
 
+Close (the underlying HID device):
+
+    blink1.close([callback]);
 
 License
 ========
