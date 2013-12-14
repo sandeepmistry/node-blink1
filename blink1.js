@@ -246,6 +246,10 @@ Blink1.prototype.readPatternLine = function(position, callback) {
   });
 };
 
+Blink1.prototype.close = function() {
+	this.hidDevice.close();
+};
+
 Blink1.devices = devices;
 
 module.exports = Blink1;
