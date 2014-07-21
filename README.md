@@ -55,17 +55,21 @@ Create blink(1) object with serial number, to get list of serial numbers use
 
 Get version:
 
-    blink1.version(callback(version))
+    blink1.version(callback(version));
     
 __Set colors__
     
 Fade to RGB, optional callback called after `fadeMillis` ms:
     
-    blink1.fadeToRGB(fadeMillis, r, g, b, [callback]) // r, g, b: 0 - 255
+    blink1.fadeToRGB(fadeMillis, r, g, b, [callback]); // r, g, b: 0 - 255
     
 Set RGB:
 
-    blink1.setRGB(r, g, b, [callback]) // r, g, b: 0 - 255
+    blink1.setRGB(r, g, b, [callback]); // r, g, b: 0 - 255
+
+Turn off the blink(1) with:
+	
+	blink1.setRGB(0,0,0);
     
 __Other methods__
     
@@ -86,6 +90,14 @@ Pause (stop playing the pattern line):
 Write pattern line (set the parameters for a pattern line, at the specified position):
 
     blink1.writePatternLine(fadeMillis, r, g, b, position, [callback]) // r, g, b: 0 - 255
+
+A simple example of this, used to flash red on & off is:
+```javascript
+blink1.writePatternLine(200, 255, 0, 0, 0);
+blink1.writePatternLine(200, 0, 0, 0, 1);
+blink1.play(0);
+```
+
     
 Read pattern line (at the position):
 
