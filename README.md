@@ -72,7 +72,7 @@ Set RGB:
 
 Get RGB (mk2 only):
 
-    blink1.rgb(callback(r, g, b));
+    blink1.rgb([index,] callback(r, g, b));
 
 __Other methods__
 
