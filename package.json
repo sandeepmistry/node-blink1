@@ -15,8 +15,8 @@
     "url": "https://github.com/sandeepmistry/node-blink1/issues"
   },
   "keywords": [
-     "blink(1)",
-     "blink1" 
+    "blink(1)",
+    "blink1"
   ],
   "dependencies": {
     "node-hid": "0.2.x"
@@ -25,7 +25,8 @@
     "jshint": "latest",
     "mocha": "latest",
     "should": "latest",
-    "mockery": "latest"
+    "mockery": "latest",
+    "async": "~0.9.0"
   },
   "scripts": {
     "pretest": "jshint *.js",

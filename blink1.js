@@ -101,6 +101,10 @@ Blink1.prototype._validatePosition = function(position) {
   this._validateNumber(position, 'position', 0, 11);
 };
 
+Blink1.prototype._validateIndex = function(index) {
+  this._validateNumber(index, 'index', 0, 2);
+};
+
 Blink1.prototype._readResponse = function(callback) {
   if (this._isValidCallback(callback)) {
     callback.apply(this, [this.hidDevice.getFeatureReport(REPORT_ID, REPORT_LENGTH)]);
@@ -145,18 +149,28 @@ Blink1.prototype.eeWrite = function(address, value, callback) {
 };
 
 Blink1.prototype.degamma = function(n) {
-  return Math.floor(((1 << Math.floor(n / 32)) - 1) + 
+  return Math.floor(((1 << Math.floor(n / 32)) - 1) +
           Math.floor((1 << Math.floor(n / 32)) * Math.floor((n % 32) + 1) + 15) / 32);
 };
 
 
-Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b, callback) {
+Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b, index, callback) {
   this._validateFadeMillis(fadeMillis);
   this._validateRGB(r, g, b);
 
   var dms = fadeMillis / 10;
 
-  this._sendCommand('c', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms % 0xff);
+  if (this._isValidCallback(index)) {
+    // backwards compatible API, no index
+    callback = index;
+    index = 0;
+  } else if (index === undefined) {
+    index = 0;
+  }
+
+  this._validateIndex(index);
+
+  this._sendCommand('c', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms % 0xff, index);
 
   if(this._isValidCallback(callback)) {
     setTimeout(callback, fadeMillis);
@@ -171,6 +185,27 @@ Blink1.prototype.setRGB = function(r, g, b, callback) {
   if(this._isValidCallback(callback)) {
     callback();
   }
+};
+
+Blink1.prototype.rgb = function(index, callback) {
+  if (this._isValidCallback(index)) {
+    callback = index;
+    index = 0;
+  } else if (index === undefined) {
+    index = 0;
+  }
+
+  this._sendCommand('r', index, 0, 0, 0, 0, index);
+
+  this._readResponse(function(response) {
+    var r = response[2];
+    var g = response[3];
+    var b = response[4];
+
+    if(this._isValidCallback(callback)) {
+      callback(r, g, b);
+    }
+  });
 };
 
 Blink1.prototype._serverDown = function(on, millis, callback) {
@@ -229,7 +264,7 @@ Blink1.prototype.writePatternLine = function(fadeMillis, r, g, b, position, call
 
 Blink1.prototype.readPatternLine = function(position, callback) {
   this._validatePosition(position);
-  
+
   this._sendCommand('R', 0, 0, 0, 0, 0, position, 0);
 
   this._readResponse(function(response) {

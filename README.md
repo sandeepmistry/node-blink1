@@ -43,11 +43,11 @@ Usage
 Get list of blink(1) devices connected:
 
     Blink1.devices(); // returns array of serial numbers
-    
+
 Create blink(1) object without serial number, uses first device:
 
     var blink1 = new Blink1();
-    
+
 Create blink(1) object with serial number, to get list of serial numbers use
 `Blink1.devices()`:
 
@@ -56,29 +56,32 @@ Create blink(1) object with serial number, to get list of serial numbers use
 Get version:
 
     blink1.version(callback(version));
-    
+
 __Set colors__
-    
+
 Fade to RGB, optional callback called after `fadeMillis` ms:
-    
+
     blink1.fadeToRGB(fadeMillis, r, g, b, [callback]); // r, g, b: 0 - 255
-    
+
+    blink1.fadeToRGB(fadeMillis, r, g, b, [index, callback]); // r, g, b: 0 - 255
+                                                             // index (mk2 only): 0 - 2
+
 Set RGB:
 
     blink1.setRGB(r, g, b, [callback]); // r, g, b: 0 - 255
 
-Turn off the blink(1) with:
-	
-	blink1.setRGB(0,0,0);
-    
+Get RGB (mk2 only):
+
+    blink1.rgb(callback(r, g, b));
+
 __Other methods__
-    
+
 Set server down (enable, disable), optional callback called after `millis` ms:
 
     blink1.enableServerDown(millis, [callback]) // tickle
 
     blink1.disableServerDown(millis, [callback]) // off
-    
+
 Play (start playing the pattern lines at the specified position):
 
     blink1.play = function(position, [callback])
@@ -86,7 +89,7 @@ Play (start playing the pattern lines at the specified position):
 Pause (stop playing the pattern line):
 
     blink1.pause = function([callback])
-    
+
 Write pattern line (set the parameters for a pattern line, at the specified position):
 
     blink1.writePatternLine(fadeMillis, r, g, b, position, [callback]) // r, g, b: 0 - 255
@@ -98,7 +101,6 @@ blink1.writePatternLine(200, 0, 0, 0, 1);
 blink1.play(0);
 ```
 
-    
 Read pattern line (at the position):
 
     blink1.readPatternLine(position, [callback])
@@ -110,7 +112,7 @@ Close (the underlying HID device):
 License
 ========
 
-Copyright (C) 2013 Sandeep Mistry <sandeep.mistry@gmail.com>
+Copyright (C) 2014 Sandeep Mistry <sandeep.mistry@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

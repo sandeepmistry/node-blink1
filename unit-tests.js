@@ -299,6 +299,7 @@ describe('blink(1)', function() {
     var R = 10;
     var G = 20;
     var B = 40;
+    var INDEX = 1;
 
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
@@ -384,6 +385,28 @@ describe('blink(1)', function() {
     it('should call back', function(done) {
       blink1.fadeToRGB(FADE_MILLIS, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), done);
     });
+
+    it('should throw an error when index is less than 0', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, R, G, B, -1);
+      }).should.throwError('index must be between 0 and 2');
+    });
+
+    it('should throw an error when index is greater than 2', function() {
+      (function(){
+        blink1.fadeToRGB(FADE_MILLIS, R, G, B, 3);
+      }).should.throwError('index must be between 0 and 2');
+    });
+
+    it('should send fadetorgb index feature report', function() {
+      blink1.fadeToRGB(FADE_MILLIS, R, G, B, INDEX);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, INDEX, 0]);
+    });
+
+    it('should call back (index)', function(done) {
+      blink1.fadeToRGB(FADE_MILLIS, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), INDEX, done);
+    });
   });
 
   describe('#Blink1.setRGB', function() {
@@ -456,6 +479,62 @@ describe('blink(1)', function() {
 
     it('should call back', function(done) {
       blink1.setRGB(R, G, B, done);
+    });
+  });
+
+  describe('#Blink1.rgb', function() {
+    var INDEX = 1;
+    var R = 1;
+    var G = 2;
+    var B = 3;
+
+    beforeEach(function() {
+      setupBlink1();
+
+      recvFeatureReport = [FEATURE_REPORT_ID, 0x72, R, G, B, 0, 0, 0, 0];
+    });
+    afterEach(teardownBlink1);
+
+    it('should send rgb feature report', function() {
+      blink1.rgb();
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x72, 0, 0, 0, 0, 0, 0, 0]);
+    });
+
+    it('should call back with r, g, b', function(done) {
+      blink1.rgb(function(r, g, b) {
+        done();
+      });
+    });
+
+    it('should call back with correct r, g, b', function(done) {
+      blink1.rgb(function(r, g, b) {
+        r.should.eql(R);
+        g.should.eql(G);
+        b.should.eql(B);
+        done();
+      });
+    });
+
+    it('should send rgb index feature report', function() {
+      blink1.rgb(INDEX);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x72, INDEX, 0, 0, 0, 0, INDEX, 0]);
+    });
+
+    it('should call back with r, g, b (index)', function(done) {
+      blink1.rgb(INDEX, function(r, g, b) {
+        done();
+      });
+    });
+
+    it('should call back with correct r, g, b (index)', function(done) {
+      blink1.rgb(INDEX, function(r, g, b) {
+        r.should.eql(R);
+        g.should.eql(G);
+        b.should.eql(B);
+        done();
+      });
     });
   });
 
