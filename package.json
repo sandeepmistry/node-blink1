@@ -19,7 +19,7 @@
     "blink1"
   ],
   "dependencies": {
-    "node-hid": "0.2.x"
+    "node-hid": "~0.3.2"
   },
   "devDependencies": {
     "jshint": "latest",
