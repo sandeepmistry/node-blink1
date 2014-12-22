@@ -644,6 +644,74 @@ describe('blink(1)', function() {
     });
   });
 
+  describe('#Blink1.playLoop', function() {
+    var STARTPOSITION = 5;
+    var ENDPOSITION = 8;
+    var COUNT = 1;
+
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
+
+    it('should throw an error when start position is not a number', function() {
+      (function(){
+        blink1.playLoop('Bad position', 2, 2);
+      }).should.throwError('position must be a number');
+    });
+
+    it('should throw an error when end position is not a number', function() {
+      (function(){
+        blink1.playLoop(1, 'Bad position', 2);
+      }).should.throwError('position must be a number');
+    });
+
+    it('should throw an error when count is not a number', function() {
+      (function(){
+        blink1.playLoop(1, 2, 'Bad count');
+      }).should.throwError('count must be a number');
+    });
+
+    it('should throw an error when start position is less than 0', function() {
+      (function(){
+        blink1.playLoop(-1, 2, 2);
+      }).should.throwError('position must be between 0 and 11');
+    });
+
+    it('should throw an error when end position is less than 0', function() {
+      (function(){
+        blink1.playLoop(1, -1, 2);
+      }).should.throwError('position must be between 0 and 11');
+    });
+
+    it('should throw an error when count is less than 0', function() {
+      (function(){
+        blink1.playLoop(1, 1, -1);
+      }).should.throwError('count must be between 0 and 255');
+    });
+
+    it('should throw an error when start position is greater than 11', function() {
+      (function(){
+        blink1.playLoop(12, 2, 2);
+      }).should.throwError('position must be between 0 and 11');
+    });
+
+    it('should throw an error when end position is greater than 11', function() {
+      (function(){
+        blink1.playLoop(2, 12, 2);
+      }).should.throwError('position must be between 0 and 11');
+    });
+
+    it('should send play on feature report', function() {
+      blink1.playLoop(STARTPOSITION, ENDPOSITION, COUNT );
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x70, 1, STARTPOSITION, ENDPOSITION, COUNT, 0, 0, 0]);
+    });
+
+    it('should call back', function(done) {
+      blink1.playLoop(0, 1, 1, done);
+    });
+  });
+
   describe('#Blink1.pause', function() {
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);

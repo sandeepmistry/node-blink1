@@ -83,6 +83,10 @@ Blink1.prototype._validateValue = function(value) {
   this._validateNumber(value, 'value', 0, 0xff);
 };
 
+Blink1.prototype._validateCount = function(value) {
+  this._validateNumber(value, 'count', 0, 0xff);
+};
+
 Blink1.prototype._validateFadeMillis = function(fadeMillis) {
   this._validateNumber(fadeMillis, 'fadeMillis', 0, 0x9FFF6);
 };
@@ -242,6 +246,22 @@ Blink1.prototype.play = function(position, callback) {
   this._validatePosition(position);
 
   this._play(1, position, callback);
+};
+
+Blink1.prototype._playLoop = function(play, position, endPosition, count, callback) {
+  this._sendCommand('p', play, position, endPosition, count);
+
+  if(this._isValidCallback(callback)) {
+    callback();
+  }
+};
+
+Blink1.prototype.playLoop = function(startPosition, endPosition, count, callback) {
+  this._validatePosition(startPosition);
+  this._validatePosition(endPosition);
+  this._validateCount(count);
+
+  this._playLoop(1, startPosition, endPosition, count, callback);
 };
 
 Blink1.prototype.pause = function(callback) {
