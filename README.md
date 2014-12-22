@@ -88,6 +88,10 @@ Play (start playing the pattern lines at the specified position):
 
     blink1.play = function(position, [callback])
 
+Play Loop (start playing a subset of the pattern lines at specified start and end positions. Specifying count = 0 will loop pattern forever):
+    
+    blink1.playLoop = function(startPosition, endPosition, count, [callback])
+
 Pause (stop playing the pattern line):
 
     blink1.pause = function([callback])
