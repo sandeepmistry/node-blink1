@@ -3,7 +3,7 @@ node-blink1
 
 [![Analytics](https://ga-beacon.appspot.com/UA-56089547-1/sandeepmistry/node-blink1?pixel)](https://github.com/igrigorik/ga-beacon)
 
-A node.js library for the
+A nNde.js library for the
 [blink(1)](http://www.kickstarter.com/projects/thingm/blink1-the-usb-rgb-led)
 by [ThingM](http://thingm.com).
 
