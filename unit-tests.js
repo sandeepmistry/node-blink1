@@ -482,6 +482,22 @@ describe('blink(1)', function() {
     });
   });
 
+  describe('#Blink1.off', function() {
+
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
+    it('should send setrgb 0, 0, 0 feature report', function() {
+      blink1.off();
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x6e, 0, 0, 0, 0, 0, 0, 0]);
+    });
+
+    it('should call back', function(done) {
+      blink1.off(done);
+    });
+  });
+
   describe('#Blink1.rgb', function() {
     var INDEX = 1;
     var R = 1;

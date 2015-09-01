@@ -86,6 +86,16 @@ async.series([
     console.log('rgb');
     blink1.rgb(0, function(r, g, b) {
       console.log('\t' + r + ', ' + g + ', ' + b);
+
+      callback();
+    });
+  },
+  function(callback) {
+    console.log('off');
+    blink1.off(function() {
+      console.log('\tdone');
+
+      callback();
     });
   },
   function() {

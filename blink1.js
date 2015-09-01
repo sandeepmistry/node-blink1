@@ -191,6 +191,11 @@ Blink1.prototype.setRGB = function(r, g, b, callback) {
   }
 };
 
+
+Blink1.prototype.off = function(callback) {
+  this.setRGB(0, 0, 0, callback);
+};
+
 Blink1.prototype.rgb = function(index, callback) {
   if (this._isValidCallback(index)) {
     callback = index;

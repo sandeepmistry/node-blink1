@@ -76,6 +76,10 @@ Get RGB (mk2 only):
 
     blink1.rgb([index,] callback(r, g, b));
 
+Off:
+
+    blink1.off([callback]);
+
 __Other methods__
 
 Set server down (enable, disable), optional callback called after `millis` ms:
@@ -89,7 +93,7 @@ Play (start playing the pattern lines at the specified position):
     blink1.play = function(position, [callback])
 
 Play Loop (start playing a subset of the pattern lines at specified start and end positions. Specifying count = 0 will loop pattern forever):
-    
+
     blink1.playLoop = function(startPosition, endPosition, count, [callback])
 
 Pause (stop playing the pattern line):
