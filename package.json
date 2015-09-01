@@ -1,7 +1,7 @@
 {
   "name": "node-blink1",
-  "description": "A node.js library for the blink(1).",
-  "version": "0.1.6",
+  "description": "A Node.js library for the blink(1).",
+  "version": "0.2.0",
   "author": {
     "name": "Sandeep Mistry",
     "email": "sandeep.mistry@gmail.com",
