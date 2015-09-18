@@ -150,13 +150,16 @@ Blink1.prototype.degamma = function(n) {
 };
 
 
-Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b, callback) {
+Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b /*, callback or ledn, callback */ ) {
+  var ledn = (typeof arguments[4] === 'number') ? arguments[4] : 0;
+  var callback = (typeof arguments[4] === 'function') ? arguments[4] : (typeof arguments[5] === 'function') ? arguments[5] : null;
+
   this._validateFadeMillis(fadeMillis);
   this._validateRGB(r, g, b);
 
   var dms = fadeMillis / 10;
 
-  this._sendCommand('c', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms % 0xff);
+  this._sendCommand('c', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms % 0xff, ledn);
 
   if(this._isValidCallback(callback)) {
     setTimeout(callback, fadeMillis);
