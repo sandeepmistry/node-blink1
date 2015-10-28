@@ -14,28 +14,9 @@ Install
 
     npm install node-blink1
 
-### Windows Users
-
-`node-blink1` depends on `node-hid`, a native module that uses `node-gyp` to
-build.  `node-gyp` requires Python 2.7.3 in the PATH, and if you have Python 3
-installed, you may have to modify your PATH for `node-gyp` to locate it.
-
-See [issue #3](https://github.com/sandeepmistry/node-blink1/issues/3) for
-details.
-
 ### Linux Users
 
-If you encounter the following error while installing, you'll need new install
-of `libusb`.
-
-```
-libusb.h: No such file or directory compilation terminated.
-```
-
-For Debian and Ubuntu, install the package `libusb-1.0-0.dev`.
-
-See [issue #4](https://github.com/sandeepmistry/node-blink1/issues/4) for
-details.
+See [node-hid's compiling from source instructions](https://github.com/node-hid/node-hid#compiling-from-source)
 
 Usage
 -----
