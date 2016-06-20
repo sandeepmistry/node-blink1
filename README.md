@@ -6,6 +6,8 @@ by [ThingM](http://thingm.com).
 
 For for info. on the blink(1), see [todbot/blink1](https://github.com/todbot/blink1)
 
+**Note**: Make sure no other programs, including [Blink1Control](https://blink1.thingm.com/blink1control/) are open and using the blink(1).
+
 ## Install
 
 ```sh
