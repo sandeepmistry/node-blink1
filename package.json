@@ -20,7 +20,8 @@
     "blink1"
   ],
   "dependencies": {
-    "node-hid": "~0.5.0"
+    "node-hid": "~0.5.0",
+    "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
     "jshint": "latest",
