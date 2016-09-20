@@ -1,4 +1,5 @@
 var HID = require('node-hid');
+var tinycolor = require('tinycolor2');
 
 var VENDOR_ID = 0x27B8;
 var PRODUCT_ID = 0x01ED;
@@ -181,6 +182,22 @@ Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b, index, callback) {
   }
 };
 
+Blink1.prototype._color = function(current) {
+  if (typeof(current) == 'string') {
+    return tinycolor(current).toRgb();
+  } else if (typeof(current.color) == 'string') {
+    return tinycolor(current.color).toRgb();
+  } else {
+    return {r: current.r, g: current.g, b: current.b };
+  }  
+}
+
+Blink1.prototype.fadeToColor = function(current, callback) {
+  var color = this._color(current);
+  var delay = current.delay || 200;
+  this.fadeToRGB(delay, color.r, color.g, color.b, callback);  
+}
+
 Blink1.prototype.setRGB = function(r, g, b, callback) {
   this._validateRGB(r, g, b);
 
@@ -303,6 +320,42 @@ Blink1.prototype.readPatternLine = function(position, callback) {
     if(this._isValidCallback(callback)) {
       callback(value);
     }
+  });
+};
+
+Blink1.prototype.playPattern = function(pattern, callback) {
+  this.pattern = pattern;
+  this._repeatPattern(0, 1, pattern, callback);
+};
+
+Blink1.prototype.repeatPattern = function(pattern, times, callback) {
+  this.pattern = pattern;
+  this._repeatPattern(0, times, pattern, callback);
+};
+
+Blink1.prototype.loopPattern = function(pattern, callback) {
+  this.pattern = pattern;
+  this._repeatPattern(0, -1, pattern, callback);
+};
+
+Blink1.prototype.stopPattern = function() {
+  this.pattern = null;
+};
+
+Blink1.prototype._repeatPattern = function(index, times, pattern, callback) {
+  var self = this;
+  if (times == 0 || this.pattern != pattern) {
+    if (this._isValidCallback(callback)) {
+      callback();
+    }
+    return;
+  }
+  if (index >= this.pattern.length) {
+    return this._repeatPattern(0, times-1, pattern, callback);
+  }
+  var self = this;
+  this.fadeToColor(this.pattern[index], function() {
+    self._repeatPattern(index+1, times, pattern, callback);
   });
 };
 
