@@ -21,13 +21,13 @@ See [node-hid's compiling from source instructions](https://github.com/node-hid/
 ## Usage
 
 ```javascript
-var Blink1 = require('node-blink1');
+const { Blink1, devices } = require('node-blink1');
 ```
 
 Get list of blink(1) devices connected:
 
 ```javascript
-Blink1.devices(); // returns array of serial numbers
+devices(); // returns array of serial numbers
 ```
 
 Create blink(1) object without serial number, uses first device:
@@ -37,7 +37,7 @@ var blink1 = new Blink1();
 ```
 
 Create blink(1) object with serial number, to get list of serial numbers use
-`Blink1.devices()`:
+`devices()`:
 
 ```javascript
 var blink1 = new Blink1(serialNumber);
@@ -45,91 +45,161 @@ var blink1 = new Blink1(serialNumber);
 
 ### Get version
 
+Returns Promise
+
 ```javascript
-blink1.version(callback(version));
+blink1.version().then*(version => {
+    // version
+});
 ```
 
 ### Set colors
 
-Fade to RGB, optional callback called after `fadeMillis` ms:
+Fade to RGB, returns Promise after `delay` ms:
 
 ```javascript
-blink1.fadeToRGB(fadeMillis, r, g, b, [callback]); // r, g, b: 0 - 255
-
-blink1.fadeToRGB(fadeMillis, r, g, b, [index, callback]); // r, g, b: 0 - 255
-                                                          // index (mk2 only): 0 - 2
+let blinkObject = {
+    delay : 1000, // Optional # or ms
+    red   : 128,  // Required 0 - 255
+    green : 128,  // Required 0 - 255
+    blue  : 128   // Required 0 - 255
+    index : 0     // Optionsl 0 - 2 (mk2 Only)
+};
+blink1.fadeToRGB(blinkObject);
 ```
 
-Set RGB:
+#### Extended Fade example
+
+Because most functions return promises, you can now chain actions together.
+
+This example will cause the device to fade to red over 2.5s, once complete, the device will then fade to green over another 2.5s.
 
 ```javascript
-blink1.setRGB(r, g, b, [callback]); // r, g, b: 0 - 255
+let blinkObject = {
+    delay : 2500,
+    red   : 255,
+    green : 0,
+    blue  : 0
+};
+blink1.fadeToRGB(blinkObject).then(({red, green, blue}) => {
+    let blinkObject = {
+        delay : 2500,
+        red   : 0,
+        green : 255,
+        blue  : 0
+    };
+    blink1.fadeToRGB(blinkObject);
+});
 ```
 
-Get RGB (mk2 only):
+Set RGB, returns Promise:
 
 ```javascript
-blink1.rgb([index,] callback(r, g, b));
+let blinkObject = {
+    red   : 128,  // Required 0 - 255
+    green : 128,  // Required 0 - 255
+    blue  : 128   // Required 0 - 255
+};
+blink1.setRGB(blinkObject);
 ```
 
-Off:
+Get RGB, returns Promise (mk2 only):
 
 ```javascript
-blink1.off([callback]);
+blink1.getRGB(index); // index defaults to 0
+```
+
+Off, returns Promise:
+
+```javascript
+blink1.off();
 ```
 
 ### Other methods
 
-Set server down (enable, disable), optional callback called after `millis` ms:
+Set server down (enable, disable), , returns Promise after `delay` ms:
 
 ```javascript
-blink1.enableServerDown(millis, [callback]); // tickle
+blink1.enableServerDown(delay); // tickle
 
-blink1.disableServerDown(millis, [callback]); // off
+blink1.disableServerDown(delay); // off
 ```
 
-Play (start playing the pattern lines at the specified position):
+Play (start playing the pattern lines at the specified position), returns Promise:
 
 ```javascript
-blink1.play(position, [callback]);
+blink1.play(position);
 ```
 
-Play Loop (start playing a subset of the pattern lines at specified start and end positions. Specifying count = 0 will loop pattern forever):
+Play Loop (start playing a subset of the pattern lines at specified start and end positions. Specifying count = 0 will loop pattern forever), returns Promise:
 
 ```javascript
-blink1.playLoop(startPosition, endPosition, count, [callback]);
+let blinkObject = {
+    start : 1, // Required
+    end   : 2, // Required
+    count : 2  // Required
+};
+blink1.playLoop(blinkObject);
 ```
 
-Pause (stop playing the pattern line):
+Pause (stop playing the pattern line), returns Promise:
 
 ```javascript
-blink1.pause([callback]);
+blink1.pause();
 ```
 
-Write pattern line (set the parameters for a pattern line, at the specified position):
+Write pattern line (set the parameters for a pattern line, at the specified position), returns Promise:
 
 ```javascript
-blink1.writePatternLine(fadeMillis, r, g, b, position, [callback]) // r, g, b: 0 - 255
+let blinkObject = {
+    delay    : 100, // Required # of ms
+    red      : 128, // Required 0 - 255
+    green    : 128, // Required 0 - 255
+    blue     : 128, // Required 0 - 255
+    position : 2    // Required
+};
+blink1.writePatternLine(blinkObject);
 ````
 
 A simple example of this, used to flash red on & off is:
 
 ```javascript
-blink1.writePatternLine(200, 255, 0, 0, 0);
-blink1.writePatternLine(200, 0, 0, 0, 1);
+let blinkObject = {
+    delay    : 200,
+    red      : 255,
+    green    : 0,
+    blue     : 0,
+    position : 0
+};
+let blinkObject2 = {
+    delay    : 200,
+    red      : 0,
+    green    : 0,
+    blue     : 0,
+    position : 1
+};
+blink1.writePatternLine(blinkObject);
+blink1.writePatternLine(blinkObject2);
 blink1.play(0);
 ```
 
-Read pattern line (at the position):
+Read pattern line (at the position), returns Promise:
 
 ```javascript
-blink1.readPatternLine(position, [callback])
+blink1.readPatternLine(position).then(({
+    red,
+    green,
+    blue,
+    delay
+}) => {
+    // readPatternLine values
+});
 ```
 
-Close (the underlying HID device):
+Close (the underlying HID device), returns Promise:
 
 ```javascript
-blink1.close([callback]);
+blink1.close();
 ```
 
 ## License

@@ -221,14 +221,7 @@ class Blink1 {
                 this._validateRGB(red, green, blue);
                 this._validateIndex(index);
             } catch(error) {
-                reject(JSON.stringify({
-                    error,
-                    delay,
-                    red,
-                    green,
-                    blue,
-                    index
-                }));
+                reject(error);
             }
 
             let dms = delay / 10;
