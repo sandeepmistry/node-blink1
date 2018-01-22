@@ -1,3 +1,4 @@
+var Color = require('rgbcolor');
 
 var should = require('should');
 var mockery = require('mockery');
@@ -328,9 +329,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : 'Bad fadeMillis',
-            red   : R,
-            green : G,
-            blue  : B
+            color : new Color('rgb('+R+','+G+','+B+')')
         }).catch(error => {
             error.should.eql("fadeMillis must be a number");
         });
@@ -341,9 +340,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : -1,
-            red   : R,
-            green : G,
-            blue  : B
+            color : new Color('rgb('+R+','+G+','+B+')')
         }).catch(error => {
             error.should.eql("fadeMillis must be between 0 and 655350");
         });
@@ -354,9 +351,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : 655351,
-            red   : R,
-            green : G,
-            blue  : B
+            color : new Color('rgb('+R+','+G+','+B+')')
         }).catch(error => {
             error.should.eql("fadeMillis must be between 0 and 655350");
         });
@@ -367,9 +362,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : 'Bad r',
-            green : G,
-            blue  : B
+            color : new Color('rgb('+R+','+G+','+B+')')
         }).catch(error => {
             error.should.eql("r must be a number");
         });
@@ -380,9 +373,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : -1,
-            green : G,
-            blue  : B
+            color : new Color('rgb('+-1+','+G+','+B+')')
         }).catch(error => {
             error.should.eql("r must be between 0 and 255");
         });
@@ -393,9 +384,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : 256,
-            green : G,
-            blue  : B
+            color : new Color('rgb('+256+','+G+','+B+')')
         }).catch(error => {
             error.should.eql("r must be between 0 and 255");
         });
@@ -406,9 +395,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : R,
-            green : 'Bad g',
-            blue  : B
+            color : new Color('rgb('+R+',Bad g,'+B+')')
         }).catch(error => {
             error.should.eql("g must be a number");
         });
@@ -419,9 +406,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : R,
-            green : -1,
-            blue  : B
+            color : new Color('rgb('+R+','+-1+','+B+')')
         }).catch(error => {
             error.should.eql("g must be between 0 and 255");
         });
@@ -432,9 +417,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : R,
-            green : 256,
-            blue  : B
+            color : new Color('rgb('+R+','+256+','+B+')')
         }).catch(error => {
             error.should.eql("g must be between 0 and 255");
         });
@@ -445,9 +428,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : R,
-            green : G,
-            blue  : 'Bad b'
+            color : new Color('rgb('+R+','+G+',Bad b)')
         }).catch(error => {
             error.should.eql("b must be a number");
         });
@@ -458,9 +439,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : R,
-            green : G,
-            blue  : -1
+            color : new Color('rgb('+R+','+G+','+-1+')')
         }).catch(error => {
             error.should.eql("b must be between 0 and 255");
         });
@@ -471,9 +450,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : R,
-            green : G,
-            blue  : 256
+            color : new Color('rgb('+R+','+G+','+256+')')
         }).catch(error => {
             error.should.eql("b must be between 0 and 255");
         });
@@ -483,9 +460,7 @@ describe('blink(1)', () => {
     it('should send fadetorgb feature report', () => {
       blink1.fadeToRGB({
           delay : FADE_MILLIS,
-          red   : R,
-          green : G,
-          blue  : B
+          color : new Color('rgb('+R+','+G+','+B+')')
       });
 
       sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, 0, 0]);
@@ -494,9 +469,7 @@ describe('blink(1)', () => {
     it('should resolve promise', (done) => {
       blink1.fadeToRGB({
           delay : FADE_MILLIS,
-          red   : R,
-          green : G,
-          blue  : B
+          color : new Color('rgb('+R+','+G+','+B+')')
       }).then(() => {
           done();
       });
@@ -506,9 +479,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : R,
-            green : G,
-            blue  : B,
+            color : new Color('rgb('+R+','+G+','+B+')'),
             index : -1
         }).catch(error => {
             error.should.eql("index must be between 0 and 2");
@@ -520,9 +491,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.fadeToRGB({
             delay : FADE_MILLIS,
-            red   : R,
-            green : G,
-            blue  : B,
+            color : new Color('rgb('+R+','+G+','+B+')'),
             index : 3
         }).catch(error => {
             error.should.eql("index must be between 0 and 2");
@@ -533,9 +502,7 @@ describe('blink(1)', () => {
     it('should send fadetorgb index feature report', () => {
       blink1.fadeToRGB({
           delay : FADE_MILLIS,
-          red   : R,
-          green : G,
-          blue  : B,
+          color : new Color('rgb('+R+','+G+','+B+')'),
           index : INDEX
       });
 
@@ -545,9 +512,7 @@ describe('blink(1)', () => {
     it('should resolve promise (index)', (done) => {
       blink1.fadeToRGB({
           delay : FADE_MILLIS,
-          red   : R,
-          green : G,
-          blue  : B,
+          color : new Color('rgb('+R+','+G+','+B+')'),
           index : INDEX
       }).then(() => {
           done();
@@ -565,11 +530,7 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when r is not a number', () => {
       (function(){
-        blink1.setRGB({
-            red   : 'Bad r',
-            green : G,
-            blue  : B
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb(bad r,'+G+','+B+')')).catch(error => {
             error.should.eql("r must be a number");
         });
       });
@@ -577,11 +538,7 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when r is less than 0', () => {
       (function(){
-        blink1.setRGB({
-            red   : -1,
-            green : G,
-            blue  : B
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb('+-1+','+G+','+B+')')).catch(error => {
             error.should.eql("r must be between 0 and 255");
         });
       });
@@ -589,11 +546,7 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when r is greater than 255', () => {
       (function(){
-        blink1.setRGB({
-            red   : 256,
-            green : G,
-            blue  : B
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb('+256+','+G+','+B+')')).catch(error => {
             error.should.eql("r must be between 0 and 255");
         });
       });
@@ -601,11 +554,7 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when g is not a number', () => {
       (function(){
-        blink1.setRGB({
-            red   : R,
-            green : 'Bad g',
-            blue  : B
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb('+R+',Bad g,'+B+')')).catch(error => {
             error.should.eql("g must be a number");
         });
       });
@@ -613,11 +562,7 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when g is less than 0', () => {
       (function(){
-        blink1.setRGB({
-            red   : R,
-            green : -1,
-            blue  : B
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb('+R+','+-1+','+B+')')).catch(error => {
             error.should.eql("g must be between 0 and 255");
         });
       });
@@ -625,11 +570,7 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when g is greater than 255', () => {
       (function(){
-        blink1.setRGB({
-            red   : R,
-            green : 256,
-            blue  : B
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb('+R+','+256+','+B+')')).catch(error => {
             error.should.eql("g must be between 0 and 255");
         });
       });
@@ -637,11 +578,7 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when b is not a number', () => {
       (function(){
-        blink1.setRGB({
-            red   : R,
-            green : G,
-            blue  : 'Bad b'
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb('+R+','+G+',Bad b)')).catch(error => {
             error.should.eql("b must be a number");
         });
       });
@@ -649,11 +586,7 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when b is less than 0', () => {
       (function(){
-        blink1.setRGB({
-            red   : R,
-            green : G,
-            blue  : -1
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb('+R+','+G+','+-1+')')).catch(error => {
             error.should.eql("b must be between 0 and 255");
         });
       });
@@ -661,32 +594,20 @@ describe('blink(1)', () => {
 
     it('should reject (catch) promise when b is greater than 255', () => {
       (function(){
-        blink1.setRGB({
-            red   : R,
-            green : G,
-            blue  : 256
-        }).catch(error => {
+        blink1.setRGB(new Color('rgb('+R+','+G+','+256+')')).catch(error => {
             error.should.eql("b must be between 0 and 255");
         });
       });
     });
 
     it('should send setrgb feature report', () => {
-      blink1.setRGB({
-          red   : R,
-          green : G,
-          blue  : B
-      });
+      blink1.setRGB(new Color('rgb('+R+','+G+','+B+')'));
 
       sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x6e, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 0, 0, 0, 0]);
     });
 
     it('should resolve promise', (done) => {
-      blink1.setRGB({
-          red   : R,
-          green : G,
-          blue  : B
-      }).then(() => {
+      blink1.setRGB(new Color('rgb('+R+','+G+','+B+')')).then(() => {
           done();
       });
     });
@@ -730,16 +651,16 @@ describe('blink(1)', () => {
     });
 
     it('should resolve promise with r, g, b', (done) => {
-      blink1.getRGB().then(({red, green, blue}) => {
+      blink1.getRGB().then(({r, g, b}) => {
         done();
       });
     });
 
     it('should resolve promise with correct r, g, b', (done) => {
-      blink1.getRGB().then(({red, green, blue}) => {
-          red.should.eql(R);
-          green.should.eql(G);
-          blue.should.eql(B);
+      blink1.getRGB().then(({r, g, b}) => {
+          r.should.eql(R);
+          g.should.eql(G);
+          b.should.eql(B);
         done();
       });
     });
@@ -751,16 +672,16 @@ describe('blink(1)', () => {
     });
 
     it('should resolve promise with r, g, b (index)', (done) => {
-      blink1.getRGB(INDEX).then(({red, green, blue}) => {
+      blink1.getRGB(INDEX).then(({r, g, b}) => {
         done();
       });
     });
 
     it('should resolve promise with correct r, g, b (index)', (done) => {
-      blink1.getRGB(INDEX).then(({red, green, blue}) => {
-          red.should.eql(R);
-          green.should.eql(G);
-          blue.should.eql(B);
+      blink1.getRGB(INDEX).then(({r, g, b}) => {
+          r.should.eql(R);
+          g.should.eql(G);
+          b.should.eql(B);
         done();
       });
     });
@@ -1055,9 +976,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : 'Bad fadeMillis',
-            red      : R,
-            green    : G,
-            blue     : B,
+            color : new Color('rgb('+R+','+G+','+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('fadeMillis must be a number');
@@ -1069,9 +988,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : -1,
-            red      : R,
-            green    : G,
-            blue     : B,
+            color : new Color('rgb('+R+','+G+','+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('fadeMillis must be between 0 and 655350');
@@ -1083,9 +1000,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : 655351,
-            red      : R,
-            green    : G,
-            blue     : B,
+            color : new Color('rgb('+R+','+G+','+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('fadeMillis must be between 0 and 655350');
@@ -1097,9 +1012,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : 'Bad r',
-            green    : G,
-            blue     : B,
+            color : new Color('rgb(Bad r,'+G+','+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('r must be a number');
@@ -1111,9 +1024,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : -1,
-            green    : G,
-            blue     : B,
+            color : new Color('rgb('+-1+','+G+','+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('r must be between 0 and 255');
@@ -1125,9 +1036,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : 256,
-            green    : G,
-            blue     : B,
+            color : new Color('rgb('+256+','+G+','+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('r must be between 0 and 255');
@@ -1139,9 +1048,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : 'Bad g',
-            blue     : B,
+            color : new Color('rgb('+R+',Bad g,'+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('g must be a number');
@@ -1153,9 +1060,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : -1,
-            blue     : B,
+            color : new Color('rgb('+R+','+-1+','+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('g must be between 0 and 255');
@@ -1167,9 +1072,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : 256,
-            blue     : B,
+            color : new Color('rgb('+R+','+256+','+B+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('g must be between 0 and 255');
@@ -1181,9 +1084,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : G,
-            blue     : 'Bad b',
+            color : new Color('rgb('+R+','+G+',Bad b)'),
             position : POSITION
         }).catch(error => {
             error.should.eql('b must be a number');
@@ -1195,9 +1096,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : G,
-            blue     : -1,
+            color : new Color('rgb('+R+','+G+','+-1+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('b must be between 0 and 255');
@@ -1209,9 +1108,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : G,
-            blue     : 256,
+            color : new Color('rgb('+R+','+G+','+256+')'),
             position : POSITION
         }).catch(error => {
             error.should.eql('b must be between 0 and 255');
@@ -1223,9 +1120,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : G,
-            blue     : B,
+            color : new Color('rgb('+R+','+G+','+B+')'),
             position : 'Bad position'
         }).catch(error => {
             error.should.eql('position must be a number');
@@ -1237,9 +1132,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : G,
-            blue     : B,
+            color : new Color('rgb('+R+','+G+','+B+')'),
             position : -1
         }).catch(error => {
             error.should.eql('position must be between 0 and 11');
@@ -1251,9 +1144,7 @@ describe('blink(1)', () => {
       (function(){
         blink1.writePatternLine({
             delay    : FADE_MILLIS,
-            red      : R,
-            green    : G,
-            blue     : B,
+            color : new Color('rgb('+R+','+G+','+B+')'),
             position : 12
         }).catch(error => {
             error.should.eql('position must be between 0 and 11');
@@ -1264,9 +1155,7 @@ describe('blink(1)', () => {
     it('should send writepatternline feature report', () => {
       blink1.writePatternLine({
           delay    : FADE_MILLIS,
-          red      : R,
-          green    : G,
-          blue     : B,
+          color    : new Color('rgb('+R+','+G+','+B+')'),
           position : POSITION
       });
 
@@ -1276,9 +1165,7 @@ describe('blink(1)', () => {
     it('should resolve promise', (done) => {
       blink1.writePatternLine({
           delay    : FADE_MILLIS,
-          red      : R,
-          green    : G,
-          blue     : B,
+          color    : new Color('rgb('+R+','+G+','+B+')'),
           position : POSITION
       }).then(() => {
           done();
@@ -1333,9 +1220,7 @@ describe('blink(1)', () => {
 
     it('should resolve promise with value', (done) => {
       blink1.readPatternLine(POSITION).then(({
-          red,
-          green,
-          blue,
+          color,
           delay
       }) => {
           done();
@@ -1345,14 +1230,12 @@ describe('blink(1)', () => {
     it('should resolve promise with correct value', (done) => {
 
       blink1.readPatternLine(POSITION).then(({
-          red,
-          green,
-          blue,
+          color,
           delay
       }) => {
-          red.should.eql(R);
-          green.should.eql(G);
-          blue.should.eql(B);
+          color.r.should.eql(R);
+          color.g.should.eql(G);
+          color.b.should.eql(B);
           delay.should.eql(FADE_MILLIS);
 
           done();

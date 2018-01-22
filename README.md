@@ -21,13 +21,15 @@ See [node-hid's compiling from source instructions](https://github.com/node-hid/
 ## Usage
 
 ```javascript
-const { Blink1, devices } = require('node-blink1');
+const Blink1 = require('node-blink1');
 ```
 
 Get list of blink(1) devices connected:
 
+* Returns an array of serial numbers
+
 ```javascript
-devices(); // returns array of serial numbers
+Blink1.devices();
 ```
 
 Create blink(1) object without serial number, uses first device:
@@ -37,7 +39,9 @@ var blink1 = new Blink1();
 ```
 
 Create blink(1) object with serial number, to get list of serial numbers use
-`devices()`:
+`Blink1.devices()`:
+
+* Accepts an optional Serial Number parameter
 
 ```javascript
 var blink1 = new Blink1(serialNumber);
@@ -45,11 +49,12 @@ var blink1 = new Blink1(serialNumber);
 
 ### Get version
 
-Returns Promise
+* Accepts an optional callback function parameter
+* Returns Promise; automatically calls optional callback
 
 ```javascript
-blink1.version().then*(version => {
-    // version
+blink1.version([callback]).then*(version => {
+    console.log("Version:", version);
 });
 ```
 
@@ -57,13 +62,20 @@ blink1.version().then*(version => {
 
 Fade to RGB, returns Promise after `delay` ms:
 
+* Accepts an object containing:
+    - Required RGBColor object
+    - Optional delay in ms
+    - Optional index 0 - 2 (only Mk2 supported)
+    - Optional callback function
+* Returns Promise; automatically calls optional callback
+
 ```javascript
+const Color = require('rgbcolor');
 let blinkObject = {
-    delay : 1000, // Optional # or ms
-    red   : 128,  // Required 0 - 255
-    green : 128,  // Required 0 - 255
-    blue  : 128   // Required 0 - 255
-    index : 0     // Optionsl 0 - 2 (mk2 Only)
+    color : new Color('orange'),
+    delay : 1000,
+    index : 0,
+    callback : () => {}
 };
 blink1.fadeToRGB(blinkObject);
 ```
@@ -77,16 +89,12 @@ This example will cause the device to fade to red over 2.5s, once complete, the 
 ```javascript
 let blinkObject = {
     delay : 2500,
-    red   : 255,
-    green : 0,
-    blue  : 0
+    color : new Color('red')
 };
 blink1.fadeToRGB(blinkObject).then(({red, green, blue}) => {
     let blinkObject = {
         delay : 2500,
-        red   : 0,
-        green : 255,
-        blue  : 0
+        color : new Color('green')
     };
     blink1.fadeToRGB(blinkObject);
 });
@@ -94,69 +102,112 @@ blink1.fadeToRGB(blinkObject).then(({red, green, blue}) => {
 
 Set RGB, returns Promise:
 
+* Accepts a required RGBColor object
+* Accepts an optional callback function
+* Returns Promise; automatically calls optional callback
+
 ```javascript
-let blinkObject = {
-    red   : 128,  // Required 0 - 255
-    green : 128,  // Required 0 - 255
-    blue  : 128   // Required 0 - 255
-};
-blink1.setRGB(blinkObject);
+blink1.setRGB(new Color('red')[, callback]);
 ```
 
-Get RGB, returns Promise (mk2 only):
+Get current RGB (mk2 only):
+
+* Accepts an optional index (default is 0)
+* Accepts an optional callback function
+* Returns Promise; automatically calls optional callback
 
 ```javascript
-blink1.getRGB(index); // index defaults to 0
+blink1.getRGB([index][, callback]);
 ```
 
-Off, returns Promise:
+### Turn device off
+
+Off:
+
+* Accepts an optional callback function
+* Returns Promise; automatically calls optional callback
 
 ```javascript
-blink1.off();
+blink1.off([callback]);
 ```
 
 ### Other methods
 
-Set server down (enable, disable), , returns Promise after `delay` ms:
+#### enableServerDown() & disableServerDown()
+
+Set server down (enable, disable) after `delay` ms:
+
+* Accepts required delay in ms
+* Accepts an optional callback function
+* Returns Promise; automatically calls optional callback
 
 ```javascript
-blink1.enableServerDown(delay); // tickle
+blink1.enableServerDown(delay[, callback]); // tickle
 
-blink1.disableServerDown(delay); // off
+blink1.disableServerDown(delay[, callback]); // off
 ```
 
-Play (start playing the pattern lines at the specified position), returns Promise:
+#### play()
+
+Play (start playing the pattern lines at the specified position):
+
+* Accepts required play position
+* Accepts an optional callback function
+* Returns Promise; automatically calls optional callback
 
 ```javascript
-blink1.play(position);
+blink1.play(position[, callback]);
 ```
 
-Play Loop (start playing a subset of the pattern lines at specified start and end positions. Specifying count = 0 will loop pattern forever), returns Promise:
+#### playLoop()
+
+Play Loop (start playing a subset of the pattern lines at specified start and end positions. Specifying count = 0 will loop pattern forever):
+
+* Accepts an object containing:
+    - Required start position
+    - Required end position
+    - Required count
+    - Optional callback function
+* Returns Promise; automatically calls optional callback
 
 ```javascript
 let blinkObject = {
-    start : 1, // Required
-    end   : 2, // Required
-    count : 2  // Required
+    start    : 1,
+    end      : 2,
+    count    : 2,
+    callback : () => {}
 };
 blink1.playLoop(blinkObject);
 ```
 
-Pause (stop playing the pattern line), returns Promise:
+#### pause()
+
+Pause (stop playing the pattern line):
+
+* Accepts an optional callback function
+* Returns Promise; automatically calls optional callback
 
 ```javascript
-blink1.pause();
+blink1.pause([callback]);
 ```
 
-Write pattern line (set the parameters for a pattern line, at the specified position), returns Promise:
+#### writePatternLine()
+
+Write pattern line (set the parameters for a pattern line, at the specified position):
+
+* Accepts an object containing:
+    - Required RGBColor object
+    - Required delay in ms
+    - Required position
+    - Optional callback function
+* Returns Promise; automatically calls optional callback
 
 ```javascript
 let blinkObject = {
-    delay    : 100, // Required # of ms
-    red      : 128, // Required 0 - 255
-    green    : 128, // Required 0 - 255
-    blue     : 128, // Required 0 - 255
-    position : 2    // Required
+    color    : new Color('red'),
+    delay    : 100,
+    position : 2,
+    callback : () => {}
 };
 blink1.writePatternLine(blinkObject);
 ````
@@ -166,16 +217,12 @@ A simple example of this, used to flash red on & off is:
 ```javascript
 let blinkObject = {
     delay    : 200,
-    red      : 255,
-    green    : 0,
-    blue     : 0,
+    color    : new Color('red')
     position : 0
 };
 let blinkObject2 = {
     delay    : 200,
-    red      : 0,
-    green    : 0,
-    blue     : 0,
+    color    : new Color('black')
     position : 1
 };
 blink1.writePatternLine(blinkObject);
@@ -183,23 +230,33 @@ blink1.writePatternLine(blinkObject2);
 blink1.play(0);
 ```
 
-Read pattern line (at the position), returns Promise:
+#### readPatternLine()
+
+Read pattern line (at the position):
+
+* Accepts a required position
+* Accepts an optional callback function
+* Returns Promise; automatically calls optional callback
 
 ```javascript
-blink1.readPatternLine(position).then(({
-    red,
-    green,
-    blue,
+blink1.readPatternLine(position[, callback]).then(({
+    color,
     delay
 }) => {
     // readPatternLine values
 });
 ```
 
-Close (the underlying HID device), returns Promise:
+#### close()
+
+Close (the underlying HID device):
+
+* Accepts an optional callback function
+* Returns Promise; automatically calls optional callback
+
 
 ```javascript
-blink1.close();
+blink1.close([callback]);
 ```
 
 ## License
