@@ -3,8 +3,8 @@ const Color = require('rgbcolor');
 
 let d = Blink1.devices()[0];
 let b = new Blink1(d);
-callTheCops(new Color('red'), 1);
-callTheCops(new Color('blue'), 2);
+callTheCops({r: 255, g: 0, b: 0}, 1);
+callTheCops({r: 0, g: 0, b: 255}, 2);
 
 function callTheCops(color, index) {
     b.fadeToRGB({
@@ -16,9 +16,9 @@ function callTheCops(color, index) {
         }
     }).then(data => {
         if (data.color.r == 255) {
-            newColor = new Color('blue');
+            newColor = {r: 0, g: 0, b: 255};
         } else {
-            newColor = new Color('red');
+            newColor = {r: 255, g: 0, b: 0};
         }
         callTheCops(newColor, index);
     });

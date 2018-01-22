@@ -1,4 +1,5 @@
 const Blink1_Helpers = require('./helpers');
+const Color = require('rgbcolor');
 
 class Blink1_Validators extends Blink1_Helpers {
     constructor(serialNumber) {
@@ -38,7 +39,7 @@ class Blink1_Validators extends Blink1_Helpers {
     }
 
     _validateColor(color) {
-        if (!color.ok) {
+        if (color instanceof Color && !color.ok) {
             throw new Error('color ('+color+')is invalid');
         }
     }

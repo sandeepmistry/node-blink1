@@ -47,6 +47,26 @@ Create blink(1) object with serial number, to get list of serial numbers use
 var blink1 = new Blink1(serialNumber);
 ```
 
+### rgbcolor package usage
+
+This blink1 package natively supports the [rgbcolor package](https://www.npmjs.com/package/rgbcolor). It is not required if you just pass an object containing RGB properties. At any point you see `new Color()` in the example code below, you can replace it with an RGB color object as shown:
+
+```javascript
+// An example color object for the color red
+var red = {
+    r: 255,
+    g: 0,
+    b: 0
+};
+
+// An few example rgbcolor objects for the color red
+const Color = require('rgbcolor');
+var red = new Color('red');
+var red = new Color('rgb(255,0,0)');
+var red = new Color('#FF0000');
+var red = new Color('#F00');
+```
+
 ### Get version
 
 * Accepts an optional callback function parameter
@@ -87,6 +107,7 @@ Because most functions return promises, you can now chain actions together.
 This example will cause the device to fade to red over 2.5s, once complete, the device will then fade to green over another 2.5s.
 
 ```javascript
+const Color = require('rgbcolor');
 let blinkObject = {
     delay : 2500,
     color : new Color('red')
@@ -107,6 +128,7 @@ Set RGB, returns Promise:
 * Returns Promise; automatically calls optional callback
 
 ```javascript
+const Color = require('rgbcolor');
 blink1.setRGB(new Color('red')[, callback]);
 ```
 
@@ -203,6 +225,7 @@ Write pattern line (set the parameters for a pattern line, at the specified posi
 * Returns Promise; automatically calls optional callback
 
 ```javascript
+const Color = require('rgbcolor');
 let blinkObject = {
     color    : new Color('red'),
     delay    : 100,
@@ -215,6 +238,7 @@ blink1.writePatternLine(blinkObject);
 A simple example of this, used to flash red on & off is:
 
 ```javascript
+const Color = require('rgbcolor');
 let blinkObject = {
     delay    : 200,
     color    : new Color('red')
