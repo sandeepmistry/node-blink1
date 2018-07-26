@@ -1,12 +1,15 @@
 {
   "name": "node-blink1",
   "description": "A Node.js library for the blink(1).",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": {
     "name": "Sandeep Mistry",
     "email": "sandeep.mistry@gmail.com",
     "url": "https://github.com/sandeepmistry"
   },
+  "contributors": [
+    "Tod Kurt <todbotdotcom@gmail.com> (https://github.com/todbot)"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
