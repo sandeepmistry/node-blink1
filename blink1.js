@@ -306,6 +306,14 @@ Blink1.prototype.readPatternLine = function(position, callback) {
   });
 };
 
+Blink1.prototype.savePattern = function(callback) {
+  this._sendCommand('W', 0xBE, 0xEF, 0xCA, 0xFE, 0x00, 0x00);
+
+  if(this._isValidCallback(callback)) {
+    callback();
+  }
+};
+
 Blink1.prototype.close = function(callback) {
 	this.hidDevice.close();
 
@@ -318,4 +326,3 @@ Blink1.devices = devices;
 
 module.exports = Blink1;
 module.exports.Blink1 = Blink1; // backwards compatibility with older version
-
