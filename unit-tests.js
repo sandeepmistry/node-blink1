@@ -640,13 +640,13 @@ describe('blink(1)', function() {
     it('should throw an error when position is less than 0', function() {
       (function(){
         blink1.play(-1);
-      }).should.throwError('position must be between 0 and 11');
+      }).should.throwError('position must be between 0 and 31');
     });
 
-    it('should throw an error when position is greater than 11', function() {
+    it('should throw an error when position is greater than 31', function() {
       (function(){
-        blink1.play(12);
-      }).should.throwError('position must be between 0 and 11');
+        blink1.play(32);
+      }).should.throwError('position must be between 0 and 31');
     });
 
     it('should send play on feature report', function() {
@@ -690,13 +690,13 @@ describe('blink(1)', function() {
     it('should throw an error when start position is less than 0', function() {
       (function(){
         blink1.playLoop(-1, 2, 2);
-      }).should.throwError('position must be between 0 and 11');
+      }).should.throwError('position must be between 0 and 31');
     });
 
     it('should throw an error when end position is less than 0', function() {
       (function(){
         blink1.playLoop(1, -1, 2);
-      }).should.throwError('position must be between 0 and 11');
+      }).should.throwError('position must be between 0 and 31');
     });
 
     it('should throw an error when count is less than 0', function() {
@@ -705,16 +705,16 @@ describe('blink(1)', function() {
       }).should.throwError('count must be between 0 and 255');
     });
 
-    it('should throw an error when start position is greater than 11', function() {
+    it('should throw an error when start position is greater than 31', function() {
       (function(){
-        blink1.playLoop(12, 2, 2);
-      }).should.throwError('position must be between 0 and 11');
+        blink1.playLoop(32, 2, 2);
+      }).should.throwError('position must be between 0 and 31');
     });
 
-    it('should throw an error when end position is greater than 11', function() {
+    it('should throw an error when end position is greater than 31', function() {
       (function(){
-        blink1.playLoop(2, 12, 2);
-      }).should.throwError('position must be between 0 and 11');
+        blink1.playLoop(2, 32, 2);
+      }).should.throwError('position must be between 0 and 31');
     });
 
     it('should send play on feature report', function() {
@@ -834,13 +834,13 @@ describe('blink(1)', function() {
     it('should throw an error when position is less than 0', function() {
       (function(){
         blink1.writePatternLine(FADE_MILLIS, R, G, B, -1);
-      }).should.throwError('position must be between 0 and 11');
+      }).should.throwError('position must be between 0 and 31');
     });
 
-    it('should throw an error when position is greater than 11', function() {
+    it('should throw an error when position is greater than 31', function() {
       (function(){
-        blink1.writePatternLine(FADE_MILLIS, R, G, B, 12);
-      }).should.throwError('position must be between 0 and 11');
+        blink1.writePatternLine(FADE_MILLIS, R, G, B, 32);
+      }).should.throwError('position must be between 0 and 31');
     });
 
     it('should send writepatternline feature report', function() {
@@ -878,13 +878,13 @@ describe('blink(1)', function() {
     it('should throw an error when position is less than 0', function() {
       (function(){
         blink1.readPatternLine(-1);
-      }).should.throwError('position must be between 0 and 11');
+      }).should.throwError('position must be between 0 and 31');
     });
 
-    it('should throw an error when position is greater than 11', function() {
+    it('should throw an error when position is greater than 31', function() {
       (function(){
-        blink1.readPatternLine(12);
-      }).should.throwError('position must be between 0 and 11');
+        blink1.readPatternLine(32);
+      }).should.throwError('position must be between 0 and 31');
     });
 
     it('should send readpatternline feature report', function() {
