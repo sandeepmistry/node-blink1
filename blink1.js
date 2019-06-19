@@ -102,7 +102,7 @@ Blink1.prototype._validateMillis = function(millis) {
 };
 
 Blink1.prototype._validatePosition = function(position) {
-  this._validateNumber(position, 'position', 0, 11);
+  this._validateNumber(position, 'position', 0, 31); // mk1:12, mk2:32
 };
 
 Blink1.prototype._validateIndex = function(index) {
@@ -304,6 +304,16 @@ Blink1.prototype.readPatternLine = function(position, callback) {
       callback(value);
     }
   });
+};
+
+Blink1.prototype.setLedN = function(index, callback) {
+  this._validateIndex(index);
+
+  this._sendCommand('l', index, 0,0 );
+
+  if(this._isValidCallback(callback)) {
+    callback();
+  }
 };
 
 Blink1.prototype.savePattern = function(callback) {
