@@ -80,7 +80,7 @@ blink1.off([callback]);
 
 ### Other methods
 
-Set server down (enable, disable), optional callback called after `millis` ms:
+__Set server down [enable, disable]__, optional callback called after `millis` ms:
 
 ```javascript
 blink1.enableServerDown(millis, [callback]); // tickle
@@ -88,25 +88,27 @@ blink1.enableServerDown(millis, [callback]); // tickle
 blink1.disableServerDown(millis, [callback]); // off
 ```
 
-Play (start playing the pattern lines at the specified position):
+__Play__ (start playing the pattern lines at the specified position):
 
 ```javascript
 blink1.play(position, [callback]);
 ```
 
-Play Loop (start playing a subset of the pattern lines at specified start and end positions. Specifying count = 0 will loop pattern forever):
+__Play Loop__
+Start playing a subset of the pattern lines at specified start and end positions. Specifying count = 0 will loop pattern forever):
 
 ```javascript
 blink1.playLoop(startPosition, endPosition, count, [callback]);
 ```
 
-Pause (stop playing the pattern line):
+__Pause__ (stop playing the pattern line):
 
 ```javascript
 blink1.pause([callback]);
 ```
 
-Write pattern line (set the parameters for a pattern line, at the specified position):
+__Write pattern line__
+(set the parameters for a pattern line, at the specified position):
 
 ```javascript
 blink1.writePatternLine(fadeMillis, r, g, b, position, [callback]) // r, g, b: 0 - 255
@@ -120,21 +122,41 @@ blink1.writePatternLine(200, 0, 0, 0, 1);
 blink1.play(0);
 ```
 
-Save RAM pattern to blink(1) non-volatile memory
+__Set 'LedN'__ Set which LED to address for `writePatternLine()`:
+
 ```javascript
+blink1.setLedN(1); // set top LED
+```
+
+An example:
+
+```javascript
+blink1.setLedN(1); // set top LED for pattern position 0
+blink1.writePatternLine(200, 255, 0, 0, 0);
+blink1.setLedN(2); // set bottom LED for position 1
+blink1.writePatternLine(200, 0, 255, 0, 1);
+blink1.setLedN(0); // set both LEDs for position 2
+blink1.writePatternLine(200, 0, 0, 0, 2);
+```
+
+__Save RAM pattern__ (to blink(1) non-volatile memory)
+
+```javascript
+blink1.writePatternLine(200, 255, 0, 0, 0);
+blink1.writePatternLine(200, 0, 0, 0, 1);
 blink1.savePattern([callback]);
 ```
 Note: This command may return an error, but the command did succeed.
-This is because to save to its internal flash, the blink(1) must turn off USB
-for a moment.
+This is because to save to its internal flash memory, the blink(1) must
+turn off USB for a moment.
 
-Read pattern line (at the position):
+__Read pattern line__ (at the position):
 
 ```javascript
 blink1.readPatternLine(position, [callback])
 ```
 
-Close (the underlying HID device):
+__Close__ (the underlying HID device):
 
 ```javascript
 blink1.close([callback]);
