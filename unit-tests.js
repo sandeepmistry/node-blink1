@@ -912,6 +912,60 @@ describe('blink(1)', function() {
     });
   });
 
+  describe('#Blink1.setLedN', function() {
+    var INDEX = 1;
+
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
+
+    it('should throw an error when position is not a number', function() {
+      (function(){
+        blink1.setLedN('Bad position');
+      }).should.throwError('index must be a number');
+    });
+
+    it('should throw an error when position is less than 0', function() {
+      (function(){
+        blink1.setLedN(-1);
+      }).should.throwError('index must be between 0 and 2');
+    });
+
+    it('should throw an error when position is greater than 2', function() {
+      (function(){
+        blink1.setLedN(3);
+      }).should.throwError('index must be between 0 and 2');
+    });
+
+    it('should send setLedN on feature report', function() {
+      blink1.setLedN(INDEX);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x6c, INDEX, 0, 0, 0, 0, 0, 0]);
+    });
+
+    it('should call back', function(done) {
+      blink1.setLedN(0, done);
+    });
+  });
+
+  describe('#Blink1.savePattern', function() {
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
+    it('should send writePattern on feature report', function() {
+      blink1.savePattern();
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x57, 0xBE, 0xEF, 0xCA, 0xFE, 0x00, 0x00, 0x00]);
+    });
+
+    it('should callback', function(done) {
+      blink1.close(function() {
+        closed.should.eql(true);
+        done();
+      });
+    });
+  });
+
   describe('#Blink1.close', function() {
     beforeEach(setupBlink1);
     afterEach(teardownBlink1);
