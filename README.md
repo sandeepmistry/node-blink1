@@ -120,6 +120,14 @@ blink1.writePatternLine(200, 0, 0, 0, 1);
 blink1.play(0);
 ```
 
+Save RAM pattern to blink(1) non-volatile memory
+```javascript
+blink1.savePattern([callback]);
+```
+Note: This command may return an error, but the command did succeed.
+This is because to save to its internal flash, the blink(1) must turn off USB
+for a moment.
+
 Read pattern line (at the position):
 
 ```javascript
