@@ -5,6 +5,9 @@ var PRODUCT_ID = 0x01ED;
 
 var REPORT_ID = 1;
 var REPORT_LENGTH = 9;
+var REPORT2_ID = 2;
+var REPORT2_LENGTH = 61;
+var NOTE_LENGTH = 50;
 
 var _blink1HIDdevices = function() {
   return HID.devices(VENDOR_ID, PRODUCT_ID);
@@ -50,14 +53,24 @@ function Blink1(serialNumber) {
 }
 
 Blink1.prototype._sendCommand = function(/* command [, args ...]*/) {
-  var featureReport = [REPORT_ID, 0, 0, 0, 0, 0, 0, 0, 0];
-
-  featureReport[1] = arguments[0].charCodeAt(0);
-
-  for (var i = 1; i < arguments.length; i++) {
+  var featureReport = new Array(REPORT_LENGTH).fill(0);
+  featureReport[0] = REPORT_ID;
+  featureReport[1] = arguments[0].charCodeAt(0); // command
+  var len = Math.min(arguments.length, featureReport.length);
+  for (var i = 1; i < len; i++) {
     featureReport[i + 1] = arguments[i];
   }
+  this.hidDevice.sendFeatureReport(featureReport);
+};
 
+Blink1.prototype._sendCommand2 = function(/* command [, args ...]*/) {
+  var featureReport = new Array(REPORT2_LENGTH).fill(0);
+  featureReport[0] = REPORT2_ID;
+  featureReport[1] = arguments[0].charCodeAt(0); //command
+  var len = Math.min(arguments.length, featureReport.length);
+  for (var i = 1; i < len; i++) {
+    featureReport[i + 1] = arguments[i];
+  }
   this.hidDevice.sendFeatureReport(featureReport);
 };
 
@@ -115,12 +128,18 @@ Blink1.prototype._readResponse = function(callback) {
   }
 };
 
+Blink1.prototype._readResponse2 = function(callback) {
+  if (this._isValidCallback(callback)) {
+    callback.apply(this, [this.hidDevice.getFeatureReport(REPORT2_ID, REPORT2_LENGTH)]);
+  }
+};
+
 Blink1.prototype.version = function(callback) {
   this._sendCommand('v');
 
   this._readResponse(function(response) {
-    var version = String.fromCharCode(response[3]) + '.' + String.fromCharCode(response[4]);
-
+    var version = Number.parseInt(String.fromCharCode(response[3])) * 100 +
+                  Number.parseInt(String.fromCharCode(response[4]))
     if(this._isValidCallback(callback)) {
       callback(version);
     }
@@ -318,10 +337,89 @@ Blink1.prototype.setLedN = function(index, callback) {
 
 Blink1.prototype.savePattern = function(callback) {
   this._sendCommand('W', 0xBE, 0xEF, 0xCA, 0xFE, 0x00, 0x00);
-
   if(this._isValidCallback(callback)) {
     callback();
   }
+};
+
+Blink1.prototype.setStartupParams = function(param, callback) {
+  // FIXME: check
+  this._sendCommand('B', params.bootmode, params.playstart, params.playend, params.playcount,0,0);
+  if(this._isValidCallback(callback)) {
+    callback();
+  }
+};
+
+Blink1.prototype.getStartupParams = function(callback) {
+  // FIXME: check
+  this._sendCommand('B');
+  this._readResponse(function(response) {
+    var params = { bootmode:  response[2],
+                   playstart: response[3],
+                   playend:   response[4],
+                   playcount: response[5]
+                 };
+    if(this._isValidCallback(callback)) {
+      callback(params);
+    }
+  });
+};
+
+Blink1.prototype.writeNote = function(noteId, noteData, callback ) {
+  var data = []
+  if( typeof(noteData) === 'string' ) {
+    for(var i=0; i < noteData.length; i++) {
+      data.push(noteData.charCodeAt(i));
+    }
+  }
+  else if( Array.isArray(noteData) ) {
+    data = noteData;
+  }
+  else { // unknown
+    throw new Error('noteData must be String or Array');
+  }
+  // console.log("sending: noteId:"+noteId+" noteData:",data);
+  this._sendCommand2('F', noteId, ...data);
+  if(this._isValidCallback(callback)) {
+    callback();
+  }
+};
+
+Blink1.prototype.readNote = function(noteId, asString, callback) {
+  if( typeof(asString) != 'boolean' ) {
+    callback = asString
+    asString = true
+  }
+  this._sendCommand2('f', noteId);
+  this._readResponse2(function(response) {
+    if(this._isValidCallback(callback)) {
+      // skip over reaportId, cmd, noteId, only note data
+      var data = response.slice(3, 3+NOTE_LENGTH);
+      if( asString ) {
+        data = String.fromCharCode(...data);
+      }
+      callback(data);
+    }
+  });
+};
+
+Blink1.prototype.goBootload = function(callback) {
+  this._sendCommand2('G', 'o','B', 'o', 'o', 't');
+  this._readResponse2(function(response) {
+    if(this._isValidCallback(callback)) {
+      callback();
+    }
+  });
+};
+
+Blink1.prototype.getId = function(callback) {
+  this._sendCommand2('U');
+  this._readResponse2(function(response) {
+    if(this._isValidCallback(callback)) {
+      var data = response.slice(1); // remove reportId
+      callback(data);
+    }
+  });
 };
 
 Blink1.prototype.close = function(callback) {
