@@ -141,7 +141,7 @@ blink1.writePatternLine(200, 0, 0, 0, 2);
 
 __Save RAM pattern__ (to blink(1) non-volatile memory)
 
-```javascript
+```js
 blink1.writePatternLine(200, 255, 0, 0, 0);
 blink1.writePatternLine(200, 0, 0, 0, 1);
 blink1.savePattern([callback]);
@@ -156,9 +156,16 @@ __Read pattern line__ (at the position):
 blink1.readPatternLine(position, [callback])
 ```
 
+__Write User Note__ (to blink(1) non-volatile memory)
+
+```js
+var noteId = 2
+blink1.writeUserNote( noteId, "this is a note" )
+```
+
 __Close__ (the underlying HID device):
 
-```javascript
+```js
 blink1.close([callback]);
 ```
 
