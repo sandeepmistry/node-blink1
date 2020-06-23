@@ -79,7 +79,8 @@ blink1.off([callback]);
 ```
 
 ### Other methods
-__Disable gamma correction:
+
+__Disable gamma correction__:
 ```javascript
 blink1.enableDegamma = false   // defaults to true
 ```
