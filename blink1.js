@@ -48,6 +48,7 @@ function Blink1(serialNumber) {
     throw new Error('No blink(1)\'s with serial number ' + serialNumber + ' could be found');
   }
 
+  this.enableDegamma = true;
   this.serialNumber = serialNumber;
   this.hidDevice = new HID.HID(blink1HIDdevicePath);
 }
@@ -172,6 +173,7 @@ Blink1.prototype.eeWrite = function(address, value, callback) {
 };
 
 Blink1.prototype.degamma = function(n) {
+  if( this.enableDegamma == false ) { return n; }
   return Math.floor(((1 << Math.floor(n / 32)) - 1) +
           Math.floor((1 << Math.floor(n / 32)) * Math.floor((n % 32) + 1) + 15) / 32);
 };
