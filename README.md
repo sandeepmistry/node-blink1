@@ -79,6 +79,10 @@ blink1.off([callback]);
 ```
 
 ### Other methods
+__Disable gamma correction:
+```javascript
+blink1.enableDegamma = false   // defaults to true
+```
 
 __Set server down [enable, disable]__, optional callback called after `millis` ms:
 
