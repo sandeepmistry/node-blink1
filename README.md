@@ -173,7 +173,7 @@ __Read User Note__ (from blink(1) non-volatile memory)
 ```js
 var noteId = 2
 var asString = true
-blink1.writeNote(noteId, asString, [callback])
+blink1.readNote(noteId, asString, [callback])
 ```
 
 __Close__ (the underlying HID device):
