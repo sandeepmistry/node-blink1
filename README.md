@@ -184,7 +184,7 @@ blink1.close([callback]);
 
 ## License
 
-Copyright (C) 2015 Sandeep Mistry <sandeep.mistry@gmail.com>
+Copyright (C) 2015 Sandeep Mistry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
