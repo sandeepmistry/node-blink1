@@ -25,7 +25,15 @@ async.series([
 
   function(callback) {
     var notestr = "hi there this note is too long. abcdefghijklmnopqrstuvwxyz....0123456789";
-    console.log('Writing note 4:');
+    console.log('Writing note 4, which is over the 50-byte limit:');
+    console.log('    note:"'+notestr+'"');
+    try {
+      blink1.writeNote(4, notestr);
+    } catch(err) {
+      console.log('    rejected: '+err.message);
+    }
+    console.log('Writing note 4, trimmed to fit:');
+    notestr = notestr.slice(0, 50);
     console.log('    note:"'+notestr+'"');
     blink1.writeNote(4, notestr, function() {
       callback();
