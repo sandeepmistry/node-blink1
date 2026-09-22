@@ -10,6 +10,9 @@ describe('blink(1)', function() {
 
   var FEATURE_REPORT_ID = 1;
   var FEATURE_REPORT_LENGTH = 9;
+  var FEATURE_REPORT2_ID = 2;
+  var FEATURE_REPORT2_LENGTH = 61;
+  var NOTE_LENGTH = 50;
 
   var MOCK_HID_DEVICE_1_SERIAL_NUMBER = '1A001407';
   var MOCK_HID_DEVICE_2_SERIAL_NUMBER = '1A001408';
@@ -30,6 +33,7 @@ describe('blink(1)', function() {
   var mockHIDdevices;
   var sentFeatureReport;
   var recvFeatureReport;
+  var recvFeatureReport2;
   var closed = false;
 
   var mockHIDdevice = {
@@ -38,7 +42,13 @@ describe('blink(1)', function() {
     },
 
     getFeatureReport: function(id, length) {
-      return ((id === FEATURE_REPORT_ID ) && (length === FEATURE_REPORT_LENGTH)) ? recvFeatureReport : null;
+      if ((id === FEATURE_REPORT_ID) && (length === FEATURE_REPORT_LENGTH)) {
+        return recvFeatureReport;
+      }
+      if ((id === FEATURE_REPORT2_ID) && (length === FEATURE_REPORT2_LENGTH)) {
+        return recvFeatureReport2;
+      }
+      return null;
     },
 
     close: function() {
@@ -75,7 +85,9 @@ describe('blink(1)', function() {
     mockHIDdevices = null;
 
     recvFeatureReport = null;
+    recvFeatureReport2 = null;
     sentFeatureReport = null;
+    closed = false;
   });
 
   describe('#devices', function() {
@@ -158,6 +170,10 @@ describe('blink(1)', function() {
     blink1 = null;
   };
 
+  var report2 = function(bytes) {
+    return bytes.concat(new Array(FEATURE_REPORT2_LENGTH - bytes.length).fill(0));
+  };
+
   describe('#Blink1.version', function() {
 
     beforeEach(function() {
@@ -182,7 +198,7 @@ describe('blink(1)', function() {
     it('should call back with correct version', function(done) {
 
       blink1.version(function(version) {
-        version.should.eql('1.0');
+        version.should.eql(100);
         done();
       });
     });
@@ -379,11 +395,23 @@ describe('blink(1)', function() {
     it('should send fadetorgb feature report', function() {
       blink1.fadeToRGB(FADE_MILLIS, R, G, B);
 
-      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, 0, 0]);
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 0, 1, 0, 0]);
     });
 
     it('should call back', function(done) {
       blink1.fadeToRGB(FADE_MILLIS, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), done);
+    });
+
+    it('should send 2550ms as a full 16 bit value', function() {
+      blink1.fadeToRGB(2550, R, G, B);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 0, 255, 0, 0]);
+    });
+
+    it('should send the maximum fadeMillis as a full 16 bit value', function() {
+      blink1.fadeToRGB(655350, R, G, B);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 255, 255, 0, 0]);
     });
 
     it('should throw an error when index is less than 0', function() {
@@ -401,7 +429,7 @@ describe('blink(1)', function() {
     it('should send fadetorgb index feature report', function() {
       blink1.fadeToRGB(FADE_MILLIS, R, G, B, INDEX);
 
-      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, INDEX, 0]);
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x63, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 0, 1, INDEX, 0]);
     });
 
     it('should call back (index)', function(done) {
@@ -581,11 +609,23 @@ describe('blink(1)', function() {
     it('should send serverdown on feature report', function() {
       blink1.enableServerDown(MILLIS);
 
-      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x44, 1, (MILLIS / 10) >> 8, (MILLIS / 10) % 0xff, 0, 0, 0, 0]);
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x44, 1, 0, 1, 0, 0, 0, 0]);
     });
 
     it('should call back', function(done) {
       blink1.enableServerDown(0, done);
+    });
+
+    it('should send 2550ms as a full 16 bit value', function() {
+      blink1.enableServerDown(2550);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x44, 1, 0, 255, 0, 0, 0, 0]);
+    });
+
+    it('should send the maximum millis as a full 16 bit value', function() {
+      blink1.enableServerDown(655350);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x44, 1, 255, 255, 0, 0, 0, 0]);
     });
   });
 
@@ -846,11 +886,23 @@ describe('blink(1)', function() {
     it('should send writepatternline feature report', function() {
       blink1.writePatternLine(FADE_MILLIS, R, G, B, POSITION);
 
-      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x50, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, POSITION, 0]);
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x50, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 0, 1, POSITION, 0]);
     });
 
     it('should call back', function(done) {
       blink1.writePatternLine(FADE_MILLIS, R, G, B, POSITION, done);
+    });
+
+    it('should send 2550ms as a full 16 bit value', function() {
+      blink1.writePatternLine(2550, R, G, B, POSITION);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x50, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 0, 255, POSITION, 0]);
+    });
+
+    it('should send the maximum fadeMillis as a full 16 bit value', function() {
+      blink1.writePatternLine(655350, R, G, B, POSITION);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x50, blink1.degamma(R),  blink1.degamma(G),  blink1.degamma(B), 255, 255, POSITION, 0]);
     });
   });
 
@@ -865,7 +917,7 @@ describe('blink(1)', function() {
     beforeEach(function() {
       setupBlink1();
 
-      recvFeatureReport = [FEATURE_REPORT_ID, 0x52, R, G, B, (FADE_MILLIS / 10) >> 8, (FADE_MILLIS / 10) % 0xff, POSITION, 0];
+      recvFeatureReport = [FEATURE_REPORT_ID, 0x52, R, G, B, 0, 100, POSITION, 0];
     });
     afterEach(teardownBlink1);
 
@@ -959,10 +1011,172 @@ describe('blink(1)', function() {
     });
 
     it('should callback', function(done) {
-      blink1.close(function() {
-        closed.should.eql(true);
+      blink1.savePattern(done);
+    });
+  });
+
+  describe('#Blink1._sendCommand', function() {
+
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
+    it('should fill the report when given exactly enough arguments', function() {
+      blink1._sendCommand('P', 1, 2, 3, 4, 5, 6, 7);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x50, 1, 2, 3, 4, 5, 6, 7]);
+    });
+
+    it('should drop arguments past the end of the report', function() {
+      blink1._sendCommand('P', 1, 2, 3, 4, 5, 6, 7, 8);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x50, 1, 2, 3, 4, 5, 6, 7]);
+    });
+  });
+
+  describe('#Blink1.setStartupParams', function() {
+    var PARAMS = {
+      bootmode: 1,
+      playstart: 2,
+      playend: 3,
+      playcount: 4
+    };
+
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
+    it('should send startupparams feature report', function() {
+      blink1.setStartupParams(PARAMS);
+
+      sentFeatureReport.should.eql([FEATURE_REPORT_ID, 0x42, PARAMS.bootmode, PARAMS.playstart, PARAMS.playend, PARAMS.playcount, 0, 0, 0]);
+    });
+
+    it('should call back', function(done) {
+      blink1.setStartupParams(PARAMS, done);
+    });
+  });
+
+  describe('#Blink1.writeNote', function() {
+    var NOTE_ID = 2;
+
+    beforeEach(setupBlink1);
+    afterEach(teardownBlink1);
+
+    it('should send writenote feature report for a string', function() {
+      blink1.writeNote(NOTE_ID, 'hi');
+
+      sentFeatureReport.should.eql(report2([FEATURE_REPORT2_ID, 0x46, NOTE_ID, 0x68, 0x69]));
+    });
+
+    it('should send writenote feature report for an array', function() {
+      blink1.writeNote(NOTE_ID, [1, 2, 3]);
+
+      sentFeatureReport.should.eql(report2([FEATURE_REPORT2_ID, 0x46, NOTE_ID, 1, 2, 3]));
+    });
+
+    it('should throw an error when noteData is neither string nor array', function() {
+      (function(){
+        blink1.writeNote(NOTE_ID, 42);
+      }).should.throwError('noteData must be String or Array');
+    });
+
+    it('should throw an error when noteData is longer than NOTE_LENGTH', function() {
+      (function(){
+        blink1.writeNote(NOTE_ID, new Array(NOTE_LENGTH + 2).join('x'));
+      }).should.throwError('noteData must be ' + NOTE_LENGTH + ' bytes or less');
+    });
+
+    it('should not overflow the report when noteData is at NOTE_LENGTH', function() {
+      blink1.writeNote(NOTE_ID, new Array(NOTE_LENGTH + 1).join('x'));
+
+      sentFeatureReport.should.have.length(FEATURE_REPORT2_LENGTH);
+    });
+
+    it('should call back', function(done) {
+      blink1.writeNote(NOTE_ID, 'hi', done);
+    });
+  });
+
+  describe('#Blink1.readNote', function() {
+    var NOTE_ID = 2;
+
+    beforeEach(function() {
+      setupBlink1();
+
+      recvFeatureReport2 = report2([FEATURE_REPORT2_ID, 0x66, NOTE_ID, 0x68, 0x69]);
+    });
+    afterEach(teardownBlink1);
+
+    it('should send readnote feature report', function() {
+      blink1.readNote(NOTE_ID, function() {});
+
+      sentFeatureReport.should.eql(report2([FEATURE_REPORT2_ID, 0x66, NOTE_ID]));
+    });
+
+    it('should call back with the note as a string, zero padded to NOTE_LENGTH', function(done) {
+      blink1.readNote(NOTE_ID, true, function(data) {
+        data.should.have.length(NOTE_LENGTH);
+        data.indexOf('hi').should.eql(0);
         done();
       });
+    });
+
+    it('should call back with the note as an array when asString is false', function(done) {
+      blink1.readNote(NOTE_ID, false, function(data) {
+        data.should.eql([0x68, 0x69].concat(new Array(NOTE_LENGTH - 2).fill(0)));
+        done();
+      });
+    });
+
+    it('should default to a string when asString is omitted', function(done) {
+      blink1.readNote(NOTE_ID, function(data) {
+        data.should.be.a.String();
+        done();
+      });
+    });
+  });
+
+  describe('#Blink1.getId', function() {
+
+    beforeEach(function() {
+      setupBlink1();
+
+      recvFeatureReport2 = report2([FEATURE_REPORT2_ID, 0x55, 0xCA, 0xFE]);
+    });
+    afterEach(teardownBlink1);
+
+    it('should send getid feature report', function() {
+      blink1.getId(function() {});
+
+      sentFeatureReport.should.eql(report2([FEATURE_REPORT2_ID, 0x55]));
+    });
+
+    it('should call back with the response minus the report id', function(done) {
+      blink1.getId(function(data) {
+        data.should.eql(recvFeatureReport2.slice(1));
+        done();
+      });
+    });
+  });
+
+  describe('#Blink1.goBootload', function() {
+
+    beforeEach(function() {
+      setupBlink1();
+
+      recvFeatureReport2 = report2([FEATURE_REPORT2_ID, 0x47]);
+    });
+    afterEach(teardownBlink1);
+
+    it('should send gobootload feature report', function() {
+      blink1.goBootload(function() {});
+
+      // characterizes a defect: the magic bytes are passed as strings, not
+      // char codes, so they reach the report unconverted
+      sentFeatureReport.should.eql(report2([FEATURE_REPORT2_ID, 0x47, 'o', 'B', 'o', 'o', 't']));
+    });
+
+    it('should call back', function(done) {
+      blink1.goBootload(done);
     });
   });
 

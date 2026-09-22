@@ -57,7 +57,7 @@ Blink1.prototype._sendCommand = function(/* command [, args ...]*/) {
   var featureReport = new Array(REPORT_LENGTH).fill(0);
   featureReport[0] = REPORT_ID;
   featureReport[1] = arguments[0].charCodeAt(0); // command
-  var len = Math.min(arguments.length, featureReport.length);
+  var len = Math.min(arguments.length, featureReport.length - 1);
   for (var i = 1; i < len; i++) {
     featureReport[i + 1] = arguments[i];
   }
@@ -68,7 +68,7 @@ Blink1.prototype._sendCommand2 = function(/* command [, args ...]*/) {
   var featureReport = new Array(REPORT2_LENGTH).fill(0);
   featureReport[0] = REPORT2_ID;
   featureReport[1] = arguments[0].charCodeAt(0); //command
-  var len = Math.min(arguments.length, featureReport.length);
+  var len = Math.min(arguments.length, featureReport.length - 1);
   for (var i = 1; i < len; i++) {
     featureReport[i + 1] = arguments[i];
   }
@@ -140,7 +140,7 @@ Blink1.prototype.version = function(callback) {
 
   this._readResponse(function(response) {
     var version = Number.parseInt(String.fromCharCode(response[3])) * 100 +
-                  Number.parseInt(String.fromCharCode(response[4]))
+                  Number.parseInt(String.fromCharCode(response[4]));
     if(this._isValidCallback(callback)) {
       callback(version);
     }
@@ -195,7 +195,7 @@ Blink1.prototype.fadeToRGB = function(fadeMillis, r, g, b, index, callback) {
 
   this._validateIndex(index);
 
-  this._sendCommand('c', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms % 0xff, index);
+  this._sendCommand('c', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms & 0xff, index);
 
   if(this._isValidCallback(callback)) {
     setTimeout(callback, fadeMillis);
@@ -241,7 +241,7 @@ Blink1.prototype.rgb = function(index, callback) {
 Blink1.prototype._serverDown = function(on, millis, callback) {
   var dms = millis / 10;
 
-  this._sendCommand('D', on, dms >> 8, dms % 0xff);
+  this._sendCommand('D', on, dms >> 8, dms & 0xff);
 
   if(this._isValidCallback(callback)) {
     setTimeout(callback, millis);
@@ -301,7 +301,7 @@ Blink1.prototype.writePatternLine = function(fadeMillis, r, g, b, position, call
 
   var dms = fadeMillis / 10;
 
-  this._sendCommand('P', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms % 0xff, position, 0);
+  this._sendCommand('P', this.degamma(r), this.degamma(g), this.degamma(b), dms >> 8, dms & 0xff, position, 0);
 
   if(this._isValidCallback(callback)) {
     callback();
@@ -344,7 +344,7 @@ Blink1.prototype.savePattern = function(callback) {
   }
 };
 
-Blink1.prototype.setStartupParams = function(param, callback) {
+Blink1.prototype.setStartupParams = function(params, callback) {
   // FIXME: check
   this._sendCommand('B', params.bootmode, params.playstart, params.playend, params.playcount,0,0);
   if(this._isValidCallback(callback)) {
@@ -368,7 +368,7 @@ Blink1.prototype.getStartupParams = function(callback) {
 };
 
 Blink1.prototype.writeNote = function(noteId, noteData, callback ) {
-  var data = []
+  var data = [];
   if( typeof(noteData) === 'string' ) {
     for(var i=0; i < noteData.length; i++) {
       data.push(noteData.charCodeAt(i));
@@ -380,6 +380,9 @@ Blink1.prototype.writeNote = function(noteId, noteData, callback ) {
   else { // unknown
     throw new Error('noteData must be String or Array');
   }
+  if( data.length > NOTE_LENGTH ) {
+    throw new Error('noteData must be ' + NOTE_LENGTH + ' bytes or less');
+  }
   // console.log("sending: noteId:"+noteId+" noteData:",data);
   this._sendCommand2('F', noteId, ...data);
   if(this._isValidCallback(callback)) {
@@ -389,8 +392,8 @@ Blink1.prototype.writeNote = function(noteId, noteData, callback ) {
 
 Blink1.prototype.readNote = function(noteId, asString, callback) {
   if( typeof(asString) != 'boolean' ) {
-    callback = asString
-    asString = true
+    callback = asString;
+    asString = true;
   }
   this._sendCommand2('f', noteId);
   this._readResponse2(function(response) {
